@@ -33,4 +33,12 @@ public class ProductUnitTesting
 
         Assert.IsType<ArgumentException>(exception);
     }
+
+    [Fact]
+    public void WhenDescriptionIsNotProvidedThenShouldCreateSuccessfully()
+    {
+        var product = new Product(_name: "Rustic Frozen Pizza", _price: 0, _description: null);
+
+        Assert.NotNull(product);
+    }
 }
