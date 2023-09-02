@@ -2,11 +2,25 @@ namespace OrderingApi;
 
 public class Product
 {
-    public Product(string _name, int? _price, string? _description = null)
+    public Product(
+        string _name,
+        int? _price,
+        string? _description = null,
+        DateTime? _createdAt = null
+    )
     {
         Name = _name;
         Price = _price;
         Description = _description;
+
+        if (_createdAt == null)
+        {
+            CreatedAt = DateTime.Now;
+        }
+        else
+        {
+            CreatedAt = _createdAt;
+        }
     }
 
     public string Name
@@ -32,4 +46,5 @@ public class Product
     }
 
     public string? Description { get; set; }
+    public DateTime? CreatedAt { get; }
 }
