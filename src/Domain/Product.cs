@@ -2,10 +2,11 @@ namespace OrderingApi;
 
 public class Product
 {
-    public Product(string _name, int? _price)
+    public Product(string _name, int? _price, string? _description = null)
     {
         Name = _name;
         Price = _price;
+        Description = _description;
     }
 
     public string Name
@@ -29,4 +30,6 @@ public class Product
             }
         }
     }
+
+    public string Description { get; set; }
 }
