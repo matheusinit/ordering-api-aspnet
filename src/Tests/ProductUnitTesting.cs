@@ -57,4 +57,12 @@ public class ProductUnitTesting
 
         Assert.NotNull(product);
     }
+
+    [Fact]
+    public void WhenDeletedAtIsNotProvidedThenShouldCreateSuccessfully()
+    {
+        var product = new Product(_name: "Rustic Frozen Pizza", _price: 0, _deletedAt: null);
+
+        Assert.NotNull(product);
+    }
 }
