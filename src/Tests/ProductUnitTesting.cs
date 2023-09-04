@@ -2,18 +2,6 @@ namespace OrderingApi;
 
 using Xunit;
 
-/*
- * TODO
- *
- * Properties:
- *  - Name
- *  - Price
- *  - Description
- *  - CreatedAt
- *  - UpdatedAt
- *  - DeletedAt
- */
-
 public class ProductUnitTesting
 {
     [Fact]
