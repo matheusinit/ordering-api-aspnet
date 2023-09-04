@@ -7,7 +7,8 @@ public class Product
         int? _price,
         string? _description = null,
         DateTime? _createdAt = null,
-        DateTime? _updatedAt = null
+        DateTime? _updatedAt = null,
+        DateTime? _deletedAt = null
     )
     {
         Name = _name;
@@ -24,6 +25,7 @@ public class Product
         }
 
         UpdatedAt = _updatedAt;
+        DeletedAt = _deletedAt;
     }
 
     public string Name
@@ -51,4 +53,5 @@ public class Product
     public string? Description { get; set; }
     public DateTime? CreatedAt { get; }
     public DateTime? UpdatedAt { get; set; }
+    public DateTime? DeletedAt { get; set; }
 }
