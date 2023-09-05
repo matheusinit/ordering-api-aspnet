@@ -47,6 +47,10 @@ public class Product
             {
                 throw new ArgumentException("Price cannot be empty");
             }
+            else if (value < 0)
+            {
+                throw new ArgumentException("Price cannot be less than zero");
+            }
         }
     }
 
