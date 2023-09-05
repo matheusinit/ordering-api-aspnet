@@ -56,6 +56,19 @@ public class ProductUnitTesting
     }
 
     [Fact]
+    public void WhenUpdatedAtIsProvidedThenShouldCreateSuccessfullyWithData()
+    {
+        var currentDateTime = DateTime.Now;
+        var product = new Product(
+            _name: "Rustic Frozen Pizza",
+            _price: 0,
+            _updatedAt: currentDateTime
+        );
+
+        Assert.Equal(product.UpdatedAt, currentDateTime);
+    }
+
+    [Fact]
     public void WhenDeletedAtIsNotProvidedThenShouldCreateSuccessfully()
     {
         var product = new Product(_name: "Rustic Frozen Pizza", _price: 0, _deletedAt: null);
