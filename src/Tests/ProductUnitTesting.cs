@@ -41,6 +41,16 @@ public class ProductUnitTesting
     }
 
     [Fact]
+    public void WhenDescriptionIsProvidedWithAnEmptyStringThenShouldThrow()
+    {
+        var exception = Record.Exception(
+            () => new Product(_name: "Rustic Frozen Pizza", _price: 0, _description: "")
+        );
+
+        Assert.IsType<ArgumentException>(exception);
+    }
+
+    [Fact]
     public void WhenCreatedAtIsNotProvidedThenShouldCreateSuccessfully()
     {
         var product = new Product(_name: "Rustic Frozen Pizza", _price: 0, _createdAt: null);
