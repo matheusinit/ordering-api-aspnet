@@ -21,6 +21,7 @@ public class CreateProductIntegrationTest : IClassFixture<WebApplicationFactory<
     public async Task WhenNameIsNotProvidedThenShouldGetBadRequest()
     {
         var product = new KeyValuePair<string, string>("name", "");
+
         var sut = await _client.PostAsJsonAsync("/products", product);
 
         Assert.Equal(HttpStatusCode.BadRequest, sut.StatusCode);
