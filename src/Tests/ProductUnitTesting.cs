@@ -23,6 +23,16 @@ public class ProductUnitTesting
     }
 
     [Fact]
+    public void WhenPriceProvidedIsLessThanZeroThenShouldThrow()
+    {
+        var exception = Record.Exception(
+            () => new Product(_name: "Rustic Frozen Pizza", _price: -1)
+        );
+
+        Assert.IsType<ArgumentException>(exception);
+    }
+
+    [Fact]
     public void WhenDescriptionIsNotProvidedThenShouldCreateSuccessfully()
     {
         var product = new Product(_name: "Rustic Frozen Pizza", _price: 0, _description: null);
