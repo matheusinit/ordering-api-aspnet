@@ -54,7 +54,17 @@ public class Product
         }
     }
 
-    public string? Description { get; set; }
+    public string? Description
+    {
+        set
+        {
+            if (value == "")
+            {
+                throw new ArgumentException("Description cannot be a empty string");
+            }
+        }
+        get { return this.Description; }
+    }
     public DateTime? CreatedAt { get; }
     public DateTime? UpdatedAt { get; set; }
     public DateTime? DeletedAt { get; set; }
