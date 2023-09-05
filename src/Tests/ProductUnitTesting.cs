@@ -75,4 +75,17 @@ public class ProductUnitTesting
 
         Assert.NotNull(product);
     }
+
+    [Fact]
+    public void WhenDeletedAtIsProvidedThenShouldCreateSuccessfullyWithData()
+    {
+        var currentDateTime = DateTime.Now;
+        var product = new Product(
+            _name: "Rustic Frozen Pizza",
+            _price: 0,
+            _deletedAt: currentDateTime
+        );
+
+        Assert.Equal(product.DeletedAt, currentDateTime);
+    }
 }
