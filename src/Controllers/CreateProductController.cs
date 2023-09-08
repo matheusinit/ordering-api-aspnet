@@ -2,6 +2,12 @@ namespace OrderingApi.Controllers;
 
 using Microsoft.AspNetCore.Mvc;
 
+public class Product
+{
+    public string name { get; set; }
+    public int price { get; set; }
+}
+
 [ApiController]
 [Route("/products")]
 public class CreateProductController : ControllerBase
@@ -13,8 +19,13 @@ public class CreateProductController : ControllerBase
         _logger = logger;
     }
 
-    public ActionResult Get()
+    public ActionResult<HttpResponse> Get([FromBody] Product product)
     {
-        return BadRequest();
+        if (product.price == 0)
+        {
+            return BadRequest(error: new { message = "Price is required" });
+        }
+
+        return BadRequest(error: new { message = "" });
     }
 }
