@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using System.Net;
 using Microsoft.AspNetCore.TestHost;
 using Bogus;
-using Newtonsoft.Json.Linq;
 using System.Net.Http.Json;
 
 class ResponseError
