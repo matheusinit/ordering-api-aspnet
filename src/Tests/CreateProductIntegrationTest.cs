@@ -42,6 +42,6 @@ public class CreateProductIntegrationTest : IClassFixture<WebApplicationFactory<
 
         var responseBody = await sut.Content.ReadFromJsonAsync<ResponseError>();
         Assert.Equal(HttpStatusCode.BadRequest, sut.StatusCode);
-        Assert.Equal(responseBody.message, "Price is required");
+        Assert.Equal(responseBody?.message, "Price is required");
     }
 }
