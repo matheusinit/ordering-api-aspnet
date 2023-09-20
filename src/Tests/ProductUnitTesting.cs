@@ -1,6 +1,7 @@
 namespace OrderingApi.UnitTest;
 
 using Xunit;
+using OrderingApi.Domain;
 
 public class ProductUnitTesting
 {
