@@ -1,4 +1,4 @@
-namespace OrderingApi;
+namespace OrderingApi.IntegrationTest;
 
 using Xunit;
 using Microsoft.AspNetCore.Mvc.Testing;
