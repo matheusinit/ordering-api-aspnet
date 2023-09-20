@@ -43,4 +43,20 @@ public class CreateProductIntegrationTest : IClassFixture<WebApplicationFactory<
         Assert.Equal(HttpStatusCode.BadRequest, sut.StatusCode);
         Assert.Equal(responseBody?.message, "Price is required");
     }
+
+    [Fact]
+    public async Task WhenPriceProvidedIsLessThanZeroThenShouldGetBadRequest()
+    {
+        var randomProductName = new Faker().Commerce.ProductName();
+        var randomPrice = new Faker().Random.Int(-999999, -1);
+
+        var sut = await _client.PostAsJsonAsync(
+            "/products",
+            new { name = randomProductName, price = randomPrice }
+        );
+
+        var responseBody = await sut.Content.ReadFromJsonAsync<ResponseError>();
+        Assert.Equal(HttpStatusCode.BadRequest, sut.StatusCode);
+        Assert.Equal(responseBody?.message, "Price cannot be less than zero");
+    }
 }
