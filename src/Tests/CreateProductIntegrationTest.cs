@@ -12,6 +12,16 @@ class ResponseError
     public string message { get; set; }
 }
 
+class Product
+{
+    public string name { get; set; }
+    public int price { get; set; }
+    public string? description { get; set; }
+    public DateTime? createdAt { get; set; }
+    public DateTime? updatedAt { get; set; }
+    public DateTime? deletedAt { get; set; }
+}
+
 public class CreateProductIntegrationTest : IClassFixture<WebApplicationFactory<Program>>
 {
     private WebApplicationFactory<Program> _factory = new WebApplicationFactory<Program>();
@@ -58,5 +68,31 @@ public class CreateProductIntegrationTest : IClassFixture<WebApplicationFactory<
         var responseBody = await sut.Content.ReadFromJsonAsync<ResponseError>();
         Assert.Equal(HttpStatusCode.BadRequest, sut.StatusCode);
         Assert.Equal(responseBody?.message, "Price cannot be less than zero");
+    }
+
+    [Fact]
+    public async Task WhenDescriptionIsNotProvidedThenShouldGetCreated()
+    {
+        var randomProductName = new Faker().Commerce.ProductName();
+        var randomPrice = new Faker().Random.Int(0, 999999);
+
+        var sut = await _client.PostAsJsonAsync(
+            "/products",
+            new { name = randomProductName, price = randomPrice }
+        );
+
+        var responseBody = await sut.Content.ReadFromJsonAsync<Product>();
+        var expected = new
+        {
+            name = randomProductName,
+            price = randomPrice,
+            description = (string?)null
+        };
+
+        Assert.Equal(HttpStatusCode.Created, sut.StatusCode);
+        Assert.Equal(responseBody.name, expected.name);
+        Assert.Equal(responseBody.price, expected.price);
+        Assert.Equal(responseBody.description, expected.description);
+        Assert.IsType<DateTime>(responseBody.createdAt);
     }
 }
