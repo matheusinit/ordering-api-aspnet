@@ -1,4 +1,4 @@
-namespace OrderingApi;
+namespace OrderingApi.Domain;
 
 public class Product
 {
