@@ -19,6 +19,7 @@ public class CreateProductController : ControllerBase
         _logger = logger;
     }
 
+    [HttpPost]
     public ActionResult<HttpResponse> Get([FromBody] Product product)
     {
         if (product.price == 0)
