@@ -30,5 +30,8 @@ msbuild.log
 msbuild.err
 msbuild.wrn
 
+# asdf
+.tool-versions
+
 # Visual Studio 2015
 .vs/
