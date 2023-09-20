@@ -20,7 +20,7 @@ public class CreateProductController : ControllerBase
     }
 
     [HttpPost]
-    public ActionResult<HttpResponse> Get([FromBody] Product product)
+    public ActionResult<HttpResponse> Create([FromBody] Product product)
     {
         if (product.price == 0)
         {
