@@ -27,6 +27,6 @@ public class CreateProductController : ControllerBase
             return BadRequest(error: new { message = "Price is required" });
         }
 
-        return BadRequest(error: new { message = "" });
+        return BadRequest(error: new { message = "Price cannot be less than zero" });
     }
 }
