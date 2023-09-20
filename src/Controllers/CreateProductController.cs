@@ -6,6 +6,8 @@ public class Product
 {
     public string name { get; set; }
     public int price { get; set; }
+    public string? description { get; set; }
+    public DateTime createdAt { get; set; }
 }
 
 [ApiController]
@@ -27,6 +29,20 @@ public class CreateProductController : ControllerBase
             return BadRequest(error: new { message = "Price is required" });
         }
 
-        return BadRequest(error: new { message = "Price cannot be less than zero" });
+        if (product.price < 0)
+        {
+            return BadRequest(error: new { message = "Price cannot be less than zero" });
+        }
+
+        return Created(
+            "",
+            new Product
+            {
+                name = product.name,
+                price = product.price,
+                description = null,
+                createdAt = DateTime.Now
+            }
+        );
     }
 }
