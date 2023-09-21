@@ -40,7 +40,7 @@ public class CreateProductController : ControllerBase
             {
                 name = product.name,
                 price = product.price,
-                description = null,
+                description = product.description,
                 createdAt = DateTime.Now
             }
         );
