@@ -95,4 +95,36 @@ public class CreateProductIntegrationTest : IClassFixture<WebApplicationFactory<
         Assert.Equal(responseBody.description, expected.description);
         Assert.IsType<DateTime>(responseBody.createdAt);
     }
+
+    [Fact]
+    public async Task WhenDescriptionIsProvidedThenShouldGetCreated()
+    {
+        var randomProductName = new Faker().Commerce.ProductName();
+        var randomPrice = new Faker().Random.Int(0, 999999);
+        var randomDescription = new Faker().Lorem.Sentence();
+
+        var sut = await _client.PostAsJsonAsync(
+            "/products",
+            new
+            {
+                name = randomProductName,
+                price = randomPrice,
+                description = randomDescription
+            }
+        );
+
+        var responseBody = await sut.Content.ReadFromJsonAsync<Product>();
+        var expected = new
+        {
+            name = randomProductName,
+            price = randomPrice,
+            description = randomDescription
+        };
+
+        Assert.Equal(HttpStatusCode.Created, sut.StatusCode);
+        Assert.Equal(expected.name, responseBody.name);
+        Assert.Equal(expected.price, responseBody.price);
+        Assert.Equal(expected.description, responseBody.description);
+        Assert.IsType<DateTime>(responseBody.createdAt);
+    }
 }
