@@ -90,9 +90,9 @@ public class CreateProductIntegrationTest : IClassFixture<WebApplicationFactory<
         };
 
         Assert.Equal(HttpStatusCode.Created, sut.StatusCode);
-        Assert.Equal(responseBody.name, expected.name);
-        Assert.Equal(responseBody.price, expected.price);
-        Assert.Equal(responseBody.description, expected.description);
+        Assert.Equal(expected.name, responseBody.name);
+        Assert.Equal(expected.price, responseBody.price);
+        Assert.Equal(expected.description, responseBody.description);
         Assert.IsType<DateTime>(responseBody.createdAt);
     }
 
