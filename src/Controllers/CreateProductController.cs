@@ -24,6 +24,11 @@ public class CreateProductController : ControllerBase
     [HttpPost]
     public ActionResult<HttpResponse> Create([FromBody] Product product)
     {
+        if (product.name == "")
+        {
+            return BadRequest(error: new { message = "Name is required" });
+        }
+
         if (product.price == 0)
         {
             return BadRequest(error: new { message = "Price is required" });
