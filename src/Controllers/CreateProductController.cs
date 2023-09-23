@@ -17,10 +17,15 @@ public class Product
 public class CreateProductController : ControllerBase
 {
     private readonly ILogger<CreateProductController> _logger;
+    private readonly ApplicationContext _context;
 
-    public CreateProductController(ILogger<CreateProductController> logger)
+    public CreateProductController(
+        ILogger<CreateProductController> logger,
+        ApplicationContext context
+    )
     {
         _logger = logger;
+        _context = context;
     }
 
     [HttpPost]
@@ -41,8 +46,6 @@ public class CreateProductController : ControllerBase
             return BadRequest(error: new { message = "Price cannot be less than zero" });
         }
 
-        var dbContext = new ApplicationContext();
-
         var productEntity = new Domain.Product(
             _name: product.name,
             _price: product.price,
@@ -50,8 +53,8 @@ public class CreateProductController : ControllerBase
             _id: Guid.NewGuid().ToString()
         );
 
-        dbContext.Products.Add(productEntity);
-        dbContext.SaveChanges();
+        _context.Products.Add(productEntity);
+        _context.SaveChanges();
 
         return Created(
             "",
