@@ -6,6 +6,7 @@ using System.Net;
 using Microsoft.AspNetCore.TestHost;
 using Bogus;
 using System.Net.Http.Json;
+using OrderingApi.Data;
 
 class ResponseError
 {
@@ -14,8 +15,9 @@ class ResponseError
 
 class Product
 {
+    public string id { get; set; }
     public string name { get; set; }
-    public int price { get; set; }
+    public int? price { get; set; }
     public string? description { get; set; }
     public DateTime? createdAt { get; set; }
     public DateTime? updatedAt { get; set; }
@@ -128,5 +130,30 @@ public class CreateProductIntegrationTest : IClassFixture<WebApplicationFactory<
         Assert.Equal(expected.price, responseBody.price);
         Assert.Equal(expected.description, responseBody.description);
         Assert.IsType<DateTime>(responseBody.createdAt);
+    }
+
+    [Fact]
+    public async Task WhenValidDataIsProvidedThenShouldStoreEntityInDatabase()
+    {
+        var randomProductName = new Faker().Commerce.ProductName();
+        var randomPrice = new Faker().Random.Int(0, 999999);
+        var randomDescription = new Faker().Lorem.Sentence();
+        var response = await _client.PostAsJsonAsync(
+            "/products",
+            new
+            {
+                name = randomProductName,
+                price = randomPrice,
+                description = randomDescription
+            }
+        );
+        var product = await response.Content.ReadFromJsonAsync<Product>();
+        var context = new ApplicationContext();
+
+        var productStoredInDb = await context.Products.FindAsync(product.id);
+
+        Assert.Equal(randomProductName, productStoredInDb?.Name);
+        Assert.Equal(randomPrice, productStoredInDb?.Price);
+        Assert.Equal(randomDescription, productStoredInDb?.Description);
     }
 }
