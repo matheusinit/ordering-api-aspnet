@@ -2,18 +2,26 @@ namespace OrderingApi.Domain;
 
 public class Product
 {
+    private string name;
+    private int? price;
+    private string? description;
+
+    public Product() { }
+
     public Product(
         string _name,
         int? _price,
         string? _description = null,
         DateTime? _createdAt = null,
         DateTime? _updatedAt = null,
-        DateTime? _deletedAt = null
+        DateTime? _deletedAt = null,
+        string? _id = null
     )
     {
-        Name = _name;
-        Price = _price;
-        Description = _description;
+        Id = _id;
+        Name = name = _name;
+        Price = price = _price;
+        Description = description = _description;
 
         if (_createdAt == null)
         {
@@ -28,6 +36,8 @@ public class Product
         DeletedAt = _deletedAt;
     }
 
+    public string? Id { get; set; }
+
     public string Name
     {
         set
@@ -37,6 +47,7 @@ public class Product
                 throw new ArgumentException("Name cannot be empty");
             }
         }
+        get { return this.name; }
     }
 
     public int? Price
@@ -52,6 +63,7 @@ public class Product
                 throw new ArgumentException("Price cannot be less than zero");
             }
         }
+        get { return this.price; }
     }
 
     public string? Description
@@ -63,7 +75,7 @@ public class Product
                 throw new ArgumentException("Description cannot be a empty string");
             }
         }
-        get { return this.Description; }
+        get { return this.description; }
     }
     public DateTime? CreatedAt { get; }
     public DateTime? UpdatedAt { get; set; }
