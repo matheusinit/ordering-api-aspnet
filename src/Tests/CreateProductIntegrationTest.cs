@@ -37,9 +37,11 @@ public class CreateProductIntegrationTest : IClassFixture<WebApplicationFactory<
     [Fact]
     public async Task WhenNameIsNotProvidedThenShouldGetBadRequest()
     {
-        var sut = await _client.PostAsJsonAsync("/products", new { product = "" });
+        var sut = await _client.PostAsJsonAsync("/products", new { name = "" });
 
+        var responseBody = await sut.Content.ReadFromJsonAsync<ResponseError>();
         Assert.Equal(HttpStatusCode.BadRequest, sut.StatusCode);
+        Assert.Equal(responseBody?.message, "Name is required");
     }
 
     [Fact]
