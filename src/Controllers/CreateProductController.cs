@@ -6,7 +6,7 @@ public class Product
 {
     public string? id { get; set; }
     public string name { get; set; }
-    public int price { get; set; }
+    public int? price { get; set; }
     public string? description { get; set; }
     public DateTime createdAt { get; set; }
 }
@@ -32,21 +32,6 @@ public class CreateProductController : ControllerBase
     {
         try
         {
-            if (product.name == "")
-            {
-                return BadRequest(error: new { message = "Name is required" });
-            }
-
-            if (product.price == 0)
-            {
-                return BadRequest(error: new { message = "Price is required" });
-            }
-
-            if (product.price < 0)
-            {
-                return BadRequest(error: new { message = "Price cannot be less than zero" });
-            }
-
             var productEntity = _service.createProduct(
                 new ProductInput
                 {
@@ -68,8 +53,23 @@ public class CreateProductController : ControllerBase
                 }
             );
         }
-        catch (Exception)
+        catch (Exception error)
         {
+            if (error.Message == "Name cannot be empty")
+            {
+                return BadRequest(error: new { message = "Name is required" });
+            }
+
+            if (error.Message == "Price cannot be empty")
+            {
+                return BadRequest(error: new { message = "Price is required" });
+            }
+
+            if (error.Message == "Price cannot be less than zero")
+            {
+                return BadRequest(error: new { message = "Price cannot be less than zero" });
+            }
+
             return StatusCode(500, new { message = "An internal server error occured" });
         }
     }
