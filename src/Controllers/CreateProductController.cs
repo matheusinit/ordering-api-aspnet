@@ -32,26 +32,25 @@ public class CreateProductController : ControllerBase
     {
         try
         {
-            var productEntity = _service.createProduct(
-                new ProductInput
-                {
-                    name = product.name,
-                    price = product.price,
-                    description = product.description
-                }
-            );
+            var input = new ProductInput
+            {
+                name = product.name,
+                price = product.price,
+                description = product.description
+            };
 
-            return Created(
-                "",
-                new
-                {
-                    id = productEntity.Id,
-                    name = product.name,
-                    price = product.price,
-                    description = product.description,
-                    createdAt = product.createdAt
-                }
-            );
+            var productEntity = _service.createProduct(input);
+
+            var responseObject = new
+            {
+                id = productEntity.Id,
+                name = product.name,
+                price = product.price,
+                description = product.description,
+                createdAt = product.createdAt
+            };
+
+            return Created("", responseObject);
         }
         catch (Exception error)
         {
