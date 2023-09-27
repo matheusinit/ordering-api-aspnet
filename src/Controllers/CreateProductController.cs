@@ -1,7 +1,6 @@
 namespace OrderingApi.Controllers;
 
 using Microsoft.AspNetCore.Mvc;
-using OrderingApi.Data;
 
 public class Product
 {
@@ -17,55 +16,61 @@ public class Product
 public class CreateProductController : ControllerBase
 {
     private readonly ILogger<CreateProductController> _logger;
-    private readonly ApplicationContext _context;
+    private readonly CreateProductService _service;
 
     public CreateProductController(
         ILogger<CreateProductController> logger,
-        ApplicationContext context
+        CreateProductService service
     )
     {
         _logger = logger;
-        _context = context;
+        _service = service;
     }
 
     [HttpPost]
     public ActionResult<HttpResponse> Create([FromBody] Product product)
     {
-        if (product.name == "")
+        try
         {
-            return BadRequest(error: new { message = "Name is required" });
-        }
-
-        if (product.price == 0)
-        {
-            return BadRequest(error: new { message = "Price is required" });
-        }
-
-        if (product.price < 0)
-        {
-            return BadRequest(error: new { message = "Price cannot be less than zero" });
-        }
-
-        var productEntity = new Domain.Product(
-            _name: product.name,
-            _price: product.price,
-            _description: product.description,
-            _id: Guid.NewGuid().ToString()
-        );
-
-        _context.Products.Add(productEntity);
-        _context.SaveChanges();
-
-        return Created(
-            "",
-            new
+            if (product.name == "")
             {
-                id = productEntity.Id,
-                name = product.name,
-                price = product.price,
-                description = product.description,
-                createdAt = product.createdAt
+                return BadRequest(error: new { message = "Name is required" });
             }
-        );
+
+            if (product.price == 0)
+            {
+                return BadRequest(error: new { message = "Price is required" });
+            }
+
+            if (product.price < 0)
+            {
+                return BadRequest(error: new { message = "Price cannot be less than zero" });
+            }
+
+            var productEntity = _service.createProduct(
+                new ProductInput
+                {
+                    name = product.name,
+                    price = product.price,
+                    description = product.description
+                }
+            );
+
+            return Created(
+                "",
+                new
+                {
+                    id = productEntity.Id,
+                    name = product.name,
+                    price = product.price,
+                    description = product.description,
+                    createdAt = product.createdAt
+                }
+            );
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, new { message = "An internal server error occured" });
+        }
     }
 }

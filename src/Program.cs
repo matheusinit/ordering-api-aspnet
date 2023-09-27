@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using OrderingApi.Controllers;
 using OrderingApi.Data;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +13,7 @@ builder.Services.AddDbContext<ApplicationContext>(
             "Server=192.168.0.18,1433;User Id=sa;Database=master;Trusted_Connection=false;Password=PandaNinja13.;TrustServerCertificate=true;"
         )
 );
+builder.Services.AddScoped<CreateProductService, CreateProductService>();
 
 // Learn more about configuring Swagger/OpenAPI at
 // https://aka.ms/aspnetcore/swashbuckle
