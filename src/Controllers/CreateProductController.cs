@@ -8,7 +8,6 @@ public class Product
     public string name { get; set; }
     public int? price { get; set; }
     public string? description { get; set; }
-    public DateTime createdAt { get; set; }
 }
 
 [ApiController]
@@ -41,16 +40,7 @@ public class CreateProductController : ControllerBase
 
             var productEntity = _service.createProduct(input);
 
-            var responseObject = new
-            {
-                id = productEntity.Id,
-                name = product.name,
-                price = product.price,
-                description = product.description,
-                createdAt = product.createdAt
-            };
-
-            return Created("", responseObject);
+            return Created("", productEntity);
         }
         catch (Exception error)
         {
