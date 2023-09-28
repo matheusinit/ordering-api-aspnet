@@ -191,4 +191,23 @@ public class CreateProductIntegrationTest : IClassFixture<WebApplicationFactory<
 
         Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
     }
+
+    [Fact]
+    public async Task WhenValidDataIsProvidedShouldReturnWithLocation()
+    {
+        var randomProductName = new Faker().Commerce.ProductName();
+        var randomPrice = new Faker().Random.Int(0, 999999);
+        var randomDescription = new Faker().Lorem.Sentence();
+        var requestBody = new ProductInput
+        {
+            name = randomProductName,
+            price = randomPrice,
+            description = randomDescription
+        };
+
+        var response = await _client.PostAsJsonAsync("/products", requestBody);
+
+        var regex = @"\/products\/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}";
+        Assert.Matches(regex, response.Headers.Location?.ToString());
+    }
 }
