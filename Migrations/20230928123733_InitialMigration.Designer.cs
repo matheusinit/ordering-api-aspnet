@@ -12,7 +12,7 @@ using OrderingApi.Data;
 namespace OrderingApi.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20230923130206_InitialMigration")]
+    [Migration("20230928123733_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -29,6 +29,9 @@ namespace OrderingApi.Migrations
                 {
                     b.Property<string>("Id")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime?>("CreatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
