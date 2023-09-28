@@ -2,6 +2,7 @@ namespace OrderingApi.Data;
 
 using Microsoft.EntityFrameworkCore;
 using OrderingApi.Domain;
+using OrderingApi.Config;
 
 public class ApplicationContext : DbContext
 {
@@ -12,7 +13,7 @@ public class ApplicationContext : DbContext
         if (!optionsBuilder.IsConfigured)
         {
             optionsBuilder.UseSqlServer(
-                "Server=192.168.0.18,1433;User Id=sa;Database=master;Trusted_Connection=false;Password=PandaNinja13.;TrustServerCertificate=true;"
+                $"Server={Env.DB_HOST},{Env.DB_PORT};User Id={Env.DB_USER};Database={Env.DB_NAME};Trusted_Connection=false;Password={Env.DB_PASSWORD};TrustServerCertificate=true;"
             );
         }
     }

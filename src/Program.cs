@@ -1,6 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 using OrderingApi.Controllers;
 using OrderingApi.Data;
+using OrderingApi.Config;
+
+var root = Directory.GetCurrentDirectory();
+var env = Path.Combine(root, ".env");
+DotEnv.Load(env);
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,7 +15,7 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<ApplicationContext>(
     options =>
         options.UseSqlServer(
-            "Server=192.168.0.18,1433;User Id=sa;Database=master;Trusted_Connection=false;Password=PandaNinja13.;TrustServerCertificate=true;"
+            $"Server={Env.DB_HOST},{Env.DB_PORT};User Id={Env.DB_USER};Database={Env.DB_NAME};Trusted_Connection=false;Password={Env.DB_PASSWORD};TrustServerCertificate=true;"
         )
 );
 builder.Services.AddScoped<CreateProductService, CreateProductService>();
@@ -19,6 +24,13 @@ builder.Services.AddScoped<CreateProductService, CreateProductService>();
 // https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Host.ConfigureAppConfiguration(
+    (ctx, builder) =>
+    {
+        builder.AddEnvironmentVariables();
+    }
+);
 
 var app = builder.Build();
 
