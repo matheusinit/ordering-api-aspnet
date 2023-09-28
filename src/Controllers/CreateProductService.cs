@@ -1,6 +1,7 @@
 namespace OrderingApi.Controllers;
 
 using OrderingApi.Data;
+using OrderingApi.Domain;
 
 public class ProductServiceRequest
 {
@@ -20,7 +21,7 @@ public class CreateProductService
 
     public virtual Domain.Product createProduct(ProductServiceRequest product)
     {
-        var productEntity = new Domain.Product(
+        var productEntity = new Product(
             _name: product?.name,
             _price: product?.price,
             _description: product?.description,
