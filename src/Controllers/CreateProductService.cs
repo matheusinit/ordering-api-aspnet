@@ -2,7 +2,7 @@ namespace OrderingApi.Controllers;
 
 using OrderingApi.Data;
 
-public class ProductInput
+public class ProductServiceRequest
 {
     public string name { get; set; }
     public int? price { get; set; }
@@ -18,7 +18,7 @@ public class CreateProductService
         _context = context;
     }
 
-    public virtual Domain.Product createProduct(ProductInput product)
+    public virtual Domain.Product createProduct(ProductServiceRequest product)
     {
         var productEntity = new Domain.Product(
             _name: product.name,

@@ -16,7 +16,7 @@ class ResponseError
     public string message { get; set; }
 }
 
-class Product
+class ProductResponseBody
 {
     public string id { get; set; }
     public string name { get; set; }
@@ -88,7 +88,7 @@ public class CreateProductIntegrationTest : IClassFixture<WebApplicationFactory<
             new { name = randomProductName, price = randomPrice }
         );
 
-        var responseBody = await sut.Content.ReadFromJsonAsync<Product>();
+        var responseBody = await sut.Content.ReadFromJsonAsync<ProductResponseBody>();
 
         var expected = new
         {
@@ -121,7 +121,7 @@ public class CreateProductIntegrationTest : IClassFixture<WebApplicationFactory<
             }
         );
 
-        var responseBody = await sut.Content.ReadFromJsonAsync<Product>();
+        var responseBody = await sut.Content.ReadFromJsonAsync<ProductResponseBody>();
         var expected = new
         {
             name = randomProductName,
@@ -151,7 +151,7 @@ public class CreateProductIntegrationTest : IClassFixture<WebApplicationFactory<
                 description = randomDescription
             }
         );
-        var product = await response.Content.ReadFromJsonAsync<Product>();
+        var product = await response.Content.ReadFromJsonAsync<ProductResponseBody>();
         var context = new ApplicationContext();
 
         var productStoredInDb = await context.Products.FindAsync(product?.id);
@@ -167,14 +167,14 @@ public class CreateProductIntegrationTest : IClassFixture<WebApplicationFactory<
         var randomProductName = new Faker().Commerce.ProductName();
         var randomPrice = new Faker().Random.Int(0, 999999);
         var randomDescription = new Faker().Lorem.Sentence();
-        var requestBody = new ProductInput
+        var serviceRequest = new ProductServiceRequest
         {
             name = randomProductName,
             price = randomPrice,
             description = randomDescription
         };
         var mock = new Mock<CreateProductService>();
-        mock.Setup(s => s.createProduct(requestBody)).Throws<Exception>();
+        mock.Setup(s => s.createProduct(serviceRequest)).Throws<Exception>();
         var _client = _factory
             .WithWebHostBuilder(builder =>
             {
@@ -187,7 +187,7 @@ public class CreateProductIntegrationTest : IClassFixture<WebApplicationFactory<
             })
             .CreateClient();
 
-        var response = await _client.PostAsJsonAsync("/products", requestBody);
+        var response = await _client.PostAsJsonAsync("/products", serviceRequest);
 
         Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
     }
@@ -198,7 +198,7 @@ public class CreateProductIntegrationTest : IClassFixture<WebApplicationFactory<
         var randomProductName = new Faker().Commerce.ProductName();
         var randomPrice = new Faker().Random.Int(0, 999999);
         var randomDescription = new Faker().Lorem.Sentence();
-        var requestBody = new ProductInput
+        var requestBody = new ProductRequestBody
         {
             name = randomProductName,
             price = randomPrice,

@@ -2,7 +2,7 @@ namespace OrderingApi.Controllers;
 
 using Microsoft.AspNetCore.Mvc;
 
-public class Product
+public class ProductRequestBody
 {
     public string? id { get; set; }
     public string name { get; set; }
@@ -27,11 +27,11 @@ public class CreateProductController : ControllerBase
     }
 
     [HttpPost]
-    public ActionResult<HttpResponse> Create([FromBody] Product product)
+    public ActionResult<HttpResponse> Create([FromBody] ProductRequestBody product)
     {
         try
         {
-            var input = new ProductInput
+            var input = new ProductServiceRequest
             {
                 name = product.name,
                 price = product.price,
