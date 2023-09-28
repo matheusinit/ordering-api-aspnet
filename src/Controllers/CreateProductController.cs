@@ -40,7 +40,11 @@ public class CreateProductController : ControllerBase
 
             var productEntity = _service.createProduct(input);
 
-            return Created("", productEntity);
+            var uri = new Uri(
+                $"{Request.Scheme}://{Request.Host}{Request.PathBase}/products/{productEntity.Id}"
+            );
+
+            return Created(uri, productEntity);
         }
         catch (Exception error)
         {
