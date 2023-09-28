@@ -3,7 +3,7 @@ using OrderingApi.Controllers;
 using OrderingApi.Data;
 using OrderingApi.Config;
 
-var root = Directory.GetCurrentDirectory();
+var root = Directory.GetParent(".").Parent.Parent.FullName;
 var env = Path.Combine(root, ".env");
 DotEnv.Load(env);
 
