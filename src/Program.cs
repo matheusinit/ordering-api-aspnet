@@ -3,9 +3,7 @@ using OrderingApi.Controllers;
 using OrderingApi.Data;
 using OrderingApi.Config;
 
-var rootPath = Directory.GetParent(".").Parent.Parent.FullName;
-var dotenvFilePath = Path.Combine(rootPath, ".env");
-DotEnv.Load(dotenvFilePath);
+DotEnv.Configure();
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -38,4 +38,11 @@ public static class DotEnv
 
         return System.Environment.GetEnvironmentVariable(key);
     }
+
+    public static void Configure()
+    {
+        var rootPath = Directory.GetParent(".").Parent.Parent.FullName;
+        var dotenvFilePath = Path.Combine(rootPath, ".env");
+        Load(dotenvFilePath);
+    }
 }
