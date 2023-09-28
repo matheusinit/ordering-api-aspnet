@@ -9,7 +9,7 @@ public class Product
     public Product() { }
 
     public Product(
-        string _name,
+        string? _name,
         int? _price,
         string? _description = null,
         DateTime? _createdAt = null,

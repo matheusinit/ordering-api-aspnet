@@ -13,16 +13,16 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 class ResponseError
 {
-    public string message { get; set; }
+    public string? message { get; set; }
 }
 
 class ProductResponseBody
 {
-    public string id { get; set; }
-    public string name { get; set; }
-    public int? price { get; set; }
+    public required string id { get; set; }
+    public required string name { get; set; }
+    public int price { get; set; }
     public string? description { get; set; }
-    public DateTime? createdAt { get; set; }
+    public DateTime createdAt { get; set; }
     public DateTime? updatedAt { get; set; }
     public DateTime? deletedAt { get; set; }
 }

@@ -4,7 +4,7 @@ using OrderingApi.Data;
 
 public class ProductServiceRequest
 {
-    public string name { get; set; }
+    public string? name { get; set; }
     public int? price { get; set; }
     public string? description { get; set; }
 }
@@ -21,9 +21,9 @@ public class CreateProductService
     public virtual Domain.Product createProduct(ProductServiceRequest product)
     {
         var productEntity = new Domain.Product(
-            _name: product.name,
-            _price: product.price,
-            _description: product.description,
+            _name: product?.name,
+            _price: product?.price,
+            _description: product?.description,
             _id: Guid.NewGuid().ToString()
         );
 
