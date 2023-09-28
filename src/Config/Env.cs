@@ -41,7 +41,11 @@ public static class DotEnv
 
     public static void Configure()
     {
-        var rootPath = Directory.GetParent(".").Parent.Parent.FullName;
+        var rootPath = Directory.GetParent(".")?.Parent?.Parent?.FullName;
+
+        if (rootPath == null)
+            throw new InvalidOperationException("Could not find path for .env file.");
+
         var dotenvFilePath = Path.Combine(rootPath, ".env");
         Load(dotenvFilePath);
     }
