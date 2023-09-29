@@ -11,10 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddDbContext<ApplicationContext>(
-    options =>
-        options.UseSqlServer(
-            $"Server={Env.DB_HOST},{Env.DB_PORT};User Id={Env.DB_USER};Database={Env.DB_NAME};Trusted_Connection=false;Password={Env.DB_PASSWORD};TrustServerCertificate=true;"
-        )
+    options => options.UseSqlServer(DatabaseConnection.GetConnectionString())
 );
 builder.Services.AddScoped<CreateProductService, CreateProductService>();
 
