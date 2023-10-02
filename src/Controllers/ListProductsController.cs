@@ -14,6 +14,7 @@ public class ListProductsController : ControllerBase
         _logger = logger;
     }
 
+    [HttpGet]
     public ActionResult<HttpResponse> List()
     {
         return Ok(new ArrayList());
