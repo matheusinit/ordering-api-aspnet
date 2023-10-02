@@ -1,6 +1,8 @@
 namespace OrderingApi.Controllers;
 
+using System.Collections;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using OrderingApi.Data;
 using OrderingApi.Domain;
 
@@ -23,7 +25,25 @@ public class ListProductsController : ControllerBase
     [HttpGet]
     public ActionResult<HttpResponse> List()
     {
-        var products = _context.Products.ToList<Product>();
+        var products = _context.Products
+            .ToList<Product>()
+            .Select(p =>
+            {
+                var priceInDouble = (p.Price / 100.00) ?? 0.00;
+                var priceFormatted = double.Round(priceInDouble, 2);
+
+                return new
+                {
+                    Id = p.Id,
+                    Name = p.Name,
+                    Price = priceFormatted,
+                    Description = p.Description,
+                    CreatedAt = p.CreatedAt,
+                    UpdatedAt = p.UpdatedAt,
+                    DeletedAt = p.DeletedAt,
+                };
+            })
+            .ToList();
 
         return Ok(products);
     }
