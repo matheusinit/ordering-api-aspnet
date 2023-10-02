@@ -4,8 +4,9 @@ public static class DatabaseConnection
 {
     public static string GetConnectionString()
     {
+        var environmentEnvVar = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
         var isDevelopment = string.Equals(
-            Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT"),
+            environmentEnvVar,
             "development",
             StringComparison.InvariantCultureIgnoreCase
         );
