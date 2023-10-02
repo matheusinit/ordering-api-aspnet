@@ -36,9 +36,9 @@ public class ListProductsIntegrationTest : IClassFixture<WebApplicationFactory<P
     [Fact]
     public async Task WhenNoProductsExistThenShouldGetEmptyList()
     {
-        var sut = await _client.GetFromJsonAsync<List<Product>>("/products");
+        var list = await _client.GetFromJsonAsync<List<Product>>("/products");
 
-        Assert.Empty(sut);
+        Assert.Empty(list);
     }
 
     [Fact]
