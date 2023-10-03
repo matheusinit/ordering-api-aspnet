@@ -29,6 +29,9 @@ public class DeleteProductController : ControllerBase
             return NotFound(new { message = "Product not found" });
         }
 
+        _context.Products.Remove(productFound);
+        _context.SaveChanges();
+
         return NoContent();
     }
 }
