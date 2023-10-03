@@ -37,12 +37,32 @@ public class UpdateProductController : ControllerBase
             return NotFound(new { message = "Product not found" });
         }
 
-        if (product.name != null)
+        if (!product.name.IsNullOrEmpty())
         {
             productFound.Name = product.name;
         }
+
+        Console.WriteLine();
+        Console.WriteLine($"current: ${productFound.Price} - new: ${product.price}");
+        Console.WriteLine();
+
+        if (product.price != null)
+        {
+            productFound.Price = product.price;
+        }
         _context.SaveChanges();
 
-        return Ok(productFound);
+        var productView = new
+        {
+            Id = productFound.Id,
+            Name = productFound.Name,
+            Price = (product.price / 100.0) ?? 0.00,
+            Description = productFound.Description,
+            CreatedAt = productFound.CreatedAt,
+            UpdatedAt = productFound.UpdatedAt,
+            DeletedAt = productFound.DeletedAt
+        };
+
+        return Ok(productView);
     }
 }
