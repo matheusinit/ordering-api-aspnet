@@ -33,20 +33,18 @@ public class UpdateProductIntegrationTesting : IClassFixture<WebApplicationFacto
 
     private async Task<Product?> PostProduct()
     {
-        var randomProductNameCreation = new Faker().Commerce.ProductName();
-        var randomPriceCreation = new Faker().Random.Int(0, 999999);
+        var randomProductName = new Faker().Commerce.ProductName();
+        var randomPrice = new Faker().Random.Int(0, 999999);
         var randomDescription = new Faker().Lorem.Sentence();
-        var creationResponse = await _client.PostAsJsonAsync(
-            "/products",
-            new
-            {
-                name = randomProductNameCreation,
-                price = randomPriceCreation,
-                description = randomDescription
-            }
-        );
-        var creationResponseBody = await creationResponse.Content.ReadFromJsonAsync<Product>();
-        return creationResponseBody;
+        var insertionData = new
+        {
+            name = randomProductName,
+            price = randomPrice,
+            description = randomDescription
+        };
+        var response = await _client.PostAsJsonAsync("/products", insertionData);
+        var responseBody = await response.Content.ReadFromJsonAsync<Product>();
+        return responseBody;
     }
 
     [Fact]
@@ -68,8 +66,8 @@ public class UpdateProductIntegrationTesting : IClassFixture<WebApplicationFacto
     [Fact]
     public async Task WhenIdOfExistingProductAndNameIsProvidedThenShouldGetOk()
     {
-        var creationResponseBody = await PostProduct();
-        var id = creationResponseBody?.id;
+        var productCreated = await PostProduct();
+        var id = productCreated?.id;
         var randomProductName = new Faker().Commerce.ProductName();
         var response = await _client.PutAsJsonAsync<ProductChanges>(
             $"/products/{id}",
@@ -85,17 +83,17 @@ public class UpdateProductIntegrationTesting : IClassFixture<WebApplicationFacto
     [Fact]
     public async Task WhenIdOfExistingProductAndPriceIsProvidedThenShouldGetOk()
     {
-        var creationResponseBody = await PostProduct();
-        var id = creationResponseBody?.id;
+        var productCreated = await PostProduct();
+        var id = productCreated?.id;
         var randomPrice = new Faker().Random.Int(0, 999999);
         var response = await _client.PutAsJsonAsync<ProductChanges>(
             $"/products/{id}",
             new ProductChanges { price = randomPrice }
         );
+        var randomPriceInDouble = randomPrice / 100.0;
 
         var responseBody = await response.Content.ReadFromJsonAsync<Product>();
 
-        var randomPriceInDouble = randomPrice / 100.0;
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.Equal(randomPriceInDouble, responseBody?.price);
     }
@@ -103,30 +101,29 @@ public class UpdateProductIntegrationTesting : IClassFixture<WebApplicationFacto
     [Fact]
     public async Task WhenValidInputIsProvidedToOnlyUpdateNameThenShouldReturnOnlyTheNameUpdated()
     {
-        var creationResponseBody = await PostProduct();
-        var id = creationResponseBody?.id;
+        var productCreated = await PostProduct();
+        var id = productCreated?.id;
         var randomProductName = new Faker().Commerce.ProductName();
         var response = await _client.PutAsJsonAsync<ProductChanges>(
             $"/products/{id}",
             new ProductChanges { name = randomProductName }
         );
+        var priceInDouble = productCreated?.price / 100.0;
 
         var responseBody = await response.Content.ReadFromJsonAsync<Product>();
 
-        var priceInDouble = creationResponseBody?.price / 100.0;
-
         Assert.Equal(randomProductName, responseBody?.name);
         Assert.Equal(priceInDouble, responseBody?.price);
-        Assert.Equal(creationResponseBody?.description, responseBody?.description);
-        Assert.Equal(creationResponseBody?.createdAt, responseBody?.createdAt);
-        Assert.Equal(creationResponseBody?.deletedAt, responseBody?.deletedAt);
+        Assert.Equal(productCreated?.description, responseBody?.description);
+        Assert.Equal(productCreated?.createdAt, responseBody?.createdAt);
+        Assert.Equal(productCreated?.deletedAt, responseBody?.deletedAt);
     }
 
     [Fact]
     public async Task WhenValidInputIsProvidedThenShouldReturnUpdatedAtWithDateTimeValue()
     {
-        var creationResponseBody = await PostProduct();
-        var id = creationResponseBody?.id;
+        var productCreated = await PostProduct();
+        var id = productCreated?.id;
         var randomProductName = new Faker().Commerce.ProductName();
         var response = await _client.PutAsJsonAsync<ProductChanges>(
             $"/products/{id}",
@@ -134,8 +131,6 @@ public class UpdateProductIntegrationTesting : IClassFixture<WebApplicationFacto
         );
 
         var responseBody = await response.Content.ReadFromJsonAsync<Product>();
-
-        var priceInDouble = creationResponseBody?.price / 100.0;
 
         Assert.NotNull(responseBody?.updatedAt);
         Assert.IsType<DateTime>(responseBody?.updatedAt);
@@ -144,8 +139,8 @@ public class UpdateProductIntegrationTesting : IClassFixture<WebApplicationFacto
     [Fact]
     public async Task WhenIdOfExistingProductAndDescriptionIsProvidedThenShouldGetOk()
     {
-        var creationResponseBody = await PostProduct();
-        var id = creationResponseBody?.id;
+        var productCreated = await PostProduct();
+        var id = productCreated?.id;
         var randomDescription = new Faker().Lorem.Sentence();
         var response = await _client.PutAsJsonAsync<ProductChanges>(
             $"/products/{id}",
@@ -161,21 +156,18 @@ public class UpdateProductIntegrationTesting : IClassFixture<WebApplicationFacto
     [Fact]
     public async Task WhenValidInputIsProvidedThenShouldProductBeUpdatedInDatabase()
     {
-        var creationResponseBody = await PostProduct();
-        var id = creationResponseBody?.id;
+        var productCreated = await PostProduct();
+        var id = productCreated?.id;
         var randomProductName = new Faker().Commerce.ProductName();
         var randomPrice = new Faker().Random.Int(0, 999999);
         var randomDescription = new Faker().Lorem.Sentence();
-        await _client.PutAsJsonAsync<ProductChanges>(
-            $"/products/{id}",
-            new ProductChanges
-            {
-                name = randomProductName,
-                price = randomPrice,
-                description = randomDescription
-            }
-        );
-
+        var update = new ProductChanges
+        {
+            name = randomProductName,
+            price = randomPrice,
+            description = randomDescription
+        };
+        await _client.PutAsJsonAsync<ProductChanges>($"/products/{id}", update);
         var context = new ApplicationContext();
 
         var updatedProduct = await context.Products.FindAsync(id);
