@@ -43,17 +43,6 @@ public class UpdateProductController : ControllerBase
         }
         _context.SaveChanges();
 
-        return Ok(
-            new
-            {
-                Id = id,
-                Name = product.name,
-                Price = productFound.Price / 100.0,
-                Description = productFound.Description,
-                CreatedAt = productFound.CreatedAt,
-                UpdatedAt = productFound.UpdatedAt,
-                DeletedAt = productFound.DeletedAt
-            }
-        );
+        return Ok(productFound);
     }
 }
