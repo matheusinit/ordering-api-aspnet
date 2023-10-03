@@ -30,6 +30,18 @@ public class UpdateProductIntegrationTesting : IClassFixture<WebApplicationFacto
             .CreateClient();
     }
 
+    private async Task<Product?> PostProduct()
+    {
+        var randomProductNameCreation = new Faker().Commerce.ProductName();
+        var randomPriceCreation = new Faker().Random.Int(0, 999999);
+        var creationResponse = await _client.PostAsJsonAsync(
+            "/products",
+            new { name = randomProductNameCreation, price = randomPriceCreation }
+        );
+        var creationResponseBody = await creationResponse.Content.ReadFromJsonAsync<Product>();
+        return creationResponseBody;
+    }
+
     [Fact]
     public async Task WhenIdOfNonExistentProductIsProvidedThenShouldGetNotFound()
     {
@@ -49,13 +61,7 @@ public class UpdateProductIntegrationTesting : IClassFixture<WebApplicationFacto
     [Fact]
     public async Task WhenIdOfExistingProductAndNameIsProvidedThenShouldGetOk()
     {
-        var randomProductNameCreation = new Faker().Commerce.ProductName();
-        var randomPriceCreation = new Faker().Random.Int(0, 999999);
-        var creationResponse = await _client.PostAsJsonAsync(
-            "/products",
-            new { name = randomProductNameCreation, price = randomPriceCreation }
-        );
-        var creationResponseBody = await creationResponse.Content.ReadFromJsonAsync<Product>();
+        var creationResponseBody = await PostProduct();
         var id = creationResponseBody?.id;
         var randomProductName = new Faker().Commerce.ProductName();
         var response = await _client.PutAsJsonAsync<ProductChanges>(
@@ -71,13 +77,7 @@ public class UpdateProductIntegrationTesting : IClassFixture<WebApplicationFacto
     [Fact]
     public async Task WhenIdOfExistingProductAndPriceIsProvidedThenShouldGetOk()
     {
-        var randomProductNameCreation = new Faker().Commerce.ProductName();
-        var randomPriceCreation = new Faker().Random.Int(0, 999999);
-        var creationResponse = await _client.PostAsJsonAsync(
-            "/products",
-            new { name = randomProductNameCreation, price = randomPriceCreation }
-        );
-        var creationResponseBody = await creationResponse.Content.ReadFromJsonAsync<Product>();
+        var creationResponseBody = await PostProduct();
         var id = creationResponseBody?.id;
         var randomPrice = new Faker().Random.Int(0, 999999);
         var response = await _client.PutAsJsonAsync<ProductChanges>(
