@@ -4,6 +4,7 @@ using System.Net;
 using Bogus;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
+using OrderingApi.Data;
 using Xunit;
 
 class ProductChanges
@@ -155,5 +156,32 @@ public class UpdateProductIntegrationTesting : IClassFixture<WebApplicationFacto
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.Equal(randomDescription, responseBody?.description);
+    }
+
+    [Fact]
+    public async Task WhenValidInputIsProvidedThenShouldProductBeUpdatedInDatabase()
+    {
+        var creationResponseBody = await PostProduct();
+        var id = creationResponseBody?.id;
+        var randomProductName = new Faker().Commerce.ProductName();
+        var randomPrice = new Faker().Random.Int(0, 999999);
+        var randomDescription = new Faker().Lorem.Sentence();
+        await _client.PutAsJsonAsync<ProductChanges>(
+            $"/products/{id}",
+            new ProductChanges
+            {
+                name = randomProductName,
+                price = randomPrice,
+                description = randomDescription
+            }
+        );
+
+        var context = new ApplicationContext();
+
+        var updatedProduct = await context.Products.FindAsync(id);
+
+        Assert.Equal(randomProductName, updatedProduct?.Name);
+        Assert.Equal(randomPrice, updatedProduct?.Price);
+        Assert.Equal(randomDescription, updatedProduct?.Description);
     }
 }
