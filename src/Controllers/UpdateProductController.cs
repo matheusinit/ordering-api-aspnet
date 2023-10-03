@@ -46,6 +46,7 @@ public class UpdateProductController : ControllerBase
         {
             productFound.Price = product.price;
         }
+        productFound.UpdatedAt = DateTime.Now;
         _context.SaveChanges();
 
         var productView = new
