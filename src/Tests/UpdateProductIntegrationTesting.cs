@@ -72,6 +72,7 @@ public class UpdateProductIntegrationTesting : IClassFixture<WebApplicationFacto
         var responseBody = await response.Content.ReadFromJsonAsync<Product>();
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal(randomProductName, responseBody?.name);
     }
 
     [Fact]

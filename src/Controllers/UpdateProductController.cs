@@ -51,7 +51,7 @@ public class UpdateProductController : ControllerBase
         var productView = new
         {
             Id = productFound.Id,
-            Name = productFound.Name,
+            Name = product.name ?? productFound.Name,
             Price = (product.price / 100.0) ?? 0.00,
             Description = productFound.Description,
             CreatedAt = productFound.CreatedAt,
