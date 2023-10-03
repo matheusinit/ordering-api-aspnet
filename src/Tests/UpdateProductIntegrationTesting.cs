@@ -92,4 +92,26 @@ public class UpdateProductIntegrationTesting : IClassFixture<WebApplicationFacto
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.Equal(randomPriceInDouble, responseBody?.price);
     }
+
+    [Fact]
+    public async Task WhenValidInputIsProvidedToOnlyUpdateNameThenShouldReturnOnlyTheNameUpdated()
+    {
+        var creationResponseBody = await PostProduct();
+        var id = creationResponseBody?.id;
+        var randomProductName = new Faker().Commerce.ProductName();
+        var response = await _client.PutAsJsonAsync<ProductChanges>(
+            $"/products/{id}",
+            new ProductChanges { name = randomProductName }
+        );
+
+        var responseBody = await response.Content.ReadFromJsonAsync<Product>();
+
+        var priceInDouble = creationResponseBody?.price / 100.0;
+
+        Assert.Equal(randomProductName, responseBody?.name);
+        Assert.Equal(priceInDouble, responseBody?.price);
+        Assert.Equal(creationResponseBody.description, responseBody.description);
+        Assert.Equal(creationResponseBody.createdAt, responseBody.createdAt);
+        Assert.Equal(creationResponseBody.deletedAt, responseBody.deletedAt);
+    }
 }
