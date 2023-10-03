@@ -67,4 +67,28 @@ public class UpdateProductIntegrationTesting : IClassFixture<WebApplicationFacto
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
     }
+
+    [Fact]
+    public async Task WhenIdOfExistingProductAndPriceIsProvidedThenShouldGetOk()
+    {
+        var randomProductNameCreation = new Faker().Commerce.ProductName();
+        var randomPriceCreation = new Faker().Random.Int(0, 999999);
+        var creationResponse = await _client.PostAsJsonAsync(
+            "/products",
+            new { name = randomProductNameCreation, price = randomPriceCreation }
+        );
+        var creationResponseBody = await creationResponse.Content.ReadFromJsonAsync<Product>();
+        var id = creationResponseBody?.id;
+        var randomPrice = new Faker().Random.Int(0, 999999);
+        var response = await _client.PutAsJsonAsync<ProductChanges>(
+            $"/products/{id}",
+            new ProductChanges { price = randomPrice }
+        );
+
+        var responseBody = await response.Content.ReadFromJsonAsync<Product>();
+
+        var randomPriceInDouble = randomPrice / 100.0;
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal(randomPriceInDouble, responseBody?.price);
+    }
 }
