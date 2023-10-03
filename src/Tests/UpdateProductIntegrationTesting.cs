@@ -4,6 +4,7 @@ using System.Net;
 using Bogus;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.EntityFrameworkCore;
 using OrderingApi.Data;
 using Xunit;
 
@@ -29,6 +30,9 @@ public class UpdateProductIntegrationTesting : IClassFixture<WebApplicationFacto
         _client = _factory
             .WithWebHostBuilder(builder => builder.UseSolutionRelativeContentRoot(".."))
             .CreateClient();
+
+        var context = new ApplicationContext();
+        context.Products.ExecuteDelete<Domain.Product>();
     }
 
     private async Task<Product?> PostProduct()
@@ -61,6 +65,21 @@ public class UpdateProductIntegrationTesting : IClassFixture<WebApplicationFacto
 
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         Assert.Equal("Product not found", responseBody?.message);
+    }
+
+    [Fact]
+    public async Task WhenEmptyStringIsProvidedAsNameThenShouldGetBadRequest()
+    {
+        var productCreated = await PostProduct();
+        var id = productCreated?.id;
+        var response = await _client.PutAsJsonAsync<ProductChanges>(
+            $"/products/{id}",
+            new ProductChanges { name = "" }
+        );
+
+        var responseBody = await response.Content.ReadFromJsonAsync<ResponseError>();
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
     }
 
     [Fact]
