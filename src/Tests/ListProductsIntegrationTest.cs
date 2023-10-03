@@ -56,8 +56,8 @@ public class ListProductsIntegrationTest : IClassFixture<WebApplicationFactory<P
 
         var productPriceInDouble = product?.price / 100;
         Assert.NotEmpty(list);
-        Assert.Equal(product?.name, list[0].name);
-        Assert.Equal(productPriceInDouble, list[0].price);
+        Assert.Equal(product?.name, list.Find(p => p.id == product?.id).name);
+        Assert.Equal(productPriceInDouble, list.Find(p => p.id == product?.id).price);
     }
 
     [Fact]
