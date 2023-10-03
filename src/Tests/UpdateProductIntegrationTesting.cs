@@ -34,9 +34,15 @@ public class UpdateProductIntegrationTesting : IClassFixture<WebApplicationFacto
     {
         var randomProductNameCreation = new Faker().Commerce.ProductName();
         var randomPriceCreation = new Faker().Random.Int(0, 999999);
+        var randomDescription = new Faker().Lorem.Sentence();
         var creationResponse = await _client.PostAsJsonAsync(
             "/products",
-            new { name = randomProductNameCreation, price = randomPriceCreation }
+            new
+            {
+                name = randomProductNameCreation,
+                price = randomPriceCreation,
+                description = randomDescription
+            }
         );
         var creationResponseBody = await creationResponse.Content.ReadFromJsonAsync<Product>();
         return creationResponseBody;
@@ -132,5 +138,22 @@ public class UpdateProductIntegrationTesting : IClassFixture<WebApplicationFacto
 
         Assert.NotNull(responseBody?.updatedAt);
         Assert.IsType<DateTime>(responseBody?.updatedAt);
+    }
+
+    [Fact]
+    public async Task WhenIdOfExistingProductAndDescriptionIsProvidedThenShouldGetOk()
+    {
+        var creationResponseBody = await PostProduct();
+        var id = creationResponseBody?.id;
+        var randomDescription = new Faker().Lorem.Sentence();
+        var response = await _client.PutAsJsonAsync<ProductChanges>(
+            $"/products/{id}",
+            new ProductChanges { description = randomDescription }
+        );
+
+        var responseBody = await response.Content.ReadFromJsonAsync<Product>();
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        Assert.Equal(randomDescription, responseBody?.description);
     }
 }
