@@ -156,6 +156,21 @@ public class UpdateProductIntegrationTesting : IClassFixture<WebApplicationFacto
     }
 
     [Fact]
+    public async Task WhenEmptyStringIsProvidedAsDescriptionThenShouldGetBadRequest()
+    {
+        var productCreated = await PostProduct();
+        var id = productCreated?.id;
+        var response = await _client.PutAsJsonAsync<ProductChanges>(
+            $"/products/{id}",
+            new ProductChanges { description = "" }
+        );
+
+        var responseBody = await response.Content.ReadFromJsonAsync<ResponseError>();
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+    }
+
+    [Fact]
     public async Task WhenIdOfExistingProductAndDescriptionIsProvidedThenShouldGetOk()
     {
         var productCreated = await PostProduct();
