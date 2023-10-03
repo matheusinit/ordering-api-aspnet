@@ -42,10 +42,6 @@ public class UpdateProductController : ControllerBase
             productFound.Name = product.name;
         }
 
-        Console.WriteLine();
-        Console.WriteLine($"current: ${productFound.Price} - new: ${product.price}");
-        Console.WriteLine();
-
         if (product.price != null)
         {
             productFound.Price = product.price;
