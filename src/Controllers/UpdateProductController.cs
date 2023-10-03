@@ -1,6 +1,7 @@
 namespace OrderingApi.Controllers;
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using OrderingApi.Data;
 
@@ -39,17 +40,17 @@ public class UpdateProductController : ControllerBase
 
         if (!product.name.IsNullOrEmpty())
         {
-            productFound.Name = product.name;
+            _context.Entry(productFound).Property("Name").CurrentValue = product.name;
         }
 
         if (product.price != null)
         {
-            productFound.Price = product.price;
+            _context.Entry(productFound).Property("Price").CurrentValue = product.price;
         }
 
         if (product.description != null)
         {
-            productFound.Description = product.description;
+            _context.Entry(productFound).Property("Description").CurrentValue = product.description;
         }
 
         productFound.UpdatedAt = DateTime.Now;
@@ -58,9 +59,9 @@ public class UpdateProductController : ControllerBase
         var productView = new
         {
             Id = productFound.Id,
-            Name = product.name ?? productFound.Name,
-            Price = (product.price / 100.0) ?? productFound.Price / 100.0,
-            Description = product.description ?? productFound.Description,
+            Name = productFound.Name,
+            Price = productFound.Price / 100.0,
+            Description = productFound.Description,
             CreatedAt = productFound.CreatedAt,
             UpdatedAt = productFound.UpdatedAt,
             DeletedAt = productFound.DeletedAt
