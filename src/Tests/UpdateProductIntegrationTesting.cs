@@ -16,7 +16,7 @@ class ProductChanges
 
 class UpdateResponseError
 {
-    public string message { get; set; }
+    public required string message { get; set; }
 }
 
 public class UpdateProductIntegrationTesting : IClassFixture<WebApplicationFactory<Program>>
