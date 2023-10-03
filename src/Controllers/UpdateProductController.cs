@@ -46,6 +46,12 @@ public class UpdateProductController : ControllerBase
         {
             productFound.Price = product.price;
         }
+
+        if (product.description != null)
+        {
+            productFound.Description = product.description;
+        }
+
         productFound.UpdatedAt = DateTime.Now;
         _context.SaveChanges();
 
@@ -54,7 +60,7 @@ public class UpdateProductController : ControllerBase
             Id = productFound.Id,
             Name = product.name ?? productFound.Name,
             Price = (product.price / 100.0) ?? productFound.Price / 100.0,
-            Description = productFound.Description,
+            Description = product.description ?? productFound.Description,
             CreatedAt = productFound.CreatedAt,
             UpdatedAt = productFound.UpdatedAt,
             DeletedAt = productFound.DeletedAt
