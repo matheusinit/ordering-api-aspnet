@@ -52,7 +52,7 @@ public class UpdateProductController : ControllerBase
         {
             Id = productFound.Id,
             Name = product.name ?? productFound.Name,
-            Price = (product.price / 100.0) ?? 0.00,
+            Price = (product.price / 100.0) ?? productFound.Price / 100.0,
             Description = productFound.Description,
             CreatedAt = productFound.CreatedAt,
             UpdatedAt = productFound.UpdatedAt,
