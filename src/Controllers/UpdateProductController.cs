@@ -36,6 +36,11 @@ public class UpdateProductController : ControllerBase
             return BadRequest(new { message = "Name is required" });
         }
 
+        if (product.description == "")
+        {
+            return BadRequest(new { message = "Description is required" });
+        }
+
         var productFound = _context.Products.Find(id);
 
         if (productFound == null)
