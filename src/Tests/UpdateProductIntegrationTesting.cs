@@ -45,4 +45,26 @@ public class UpdateProductIntegrationTesting : IClassFixture<WebApplicationFacto
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         Assert.Equal("Product not found", responseBody?.message);
     }
+
+    [Fact]
+    public async Task WhenIdOfExistingProductAndNameIsProvidedThenShouldGetOk()
+    {
+        var randomProductNameCreation = new Faker().Commerce.ProductName();
+        var randomPriceCreation = new Faker().Random.Int(0, 999999);
+        var creationResponse = await _client.PostAsJsonAsync(
+            "/products",
+            new { name = randomProductNameCreation, price = randomPriceCreation }
+        );
+        var creationResponseBody = await creationResponse.Content.ReadFromJsonAsync<Product>();
+        var id = creationResponseBody?.id;
+        var randomProductName = new Faker().Commerce.ProductName();
+        var response = await _client.PutAsJsonAsync<ProductChanges>(
+            $"/products/{id}",
+            new ProductChanges { name = randomProductName }
+        );
+
+        var responseBody = await response.Content.ReadFromJsonAsync<Product>();
+
+        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+    }
 }
