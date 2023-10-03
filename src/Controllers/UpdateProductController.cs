@@ -31,6 +31,11 @@ public class UpdateProductController : ControllerBase
     [HttpPut("{id}")]
     public ActionResult<HttpResponse> Update(string id, [FromBody] ProductRequestBody product)
     {
+        if (product.name == "")
+        {
+            return BadRequest(new { message = "Name is required" });
+        }
+
         var productFound = _context.Products.Find(id);
 
         if (productFound == null)
