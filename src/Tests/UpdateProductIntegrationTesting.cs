@@ -116,9 +116,9 @@ public class UpdateProductIntegrationTesting : IClassFixture<WebApplicationFacto
 
         Assert.Equal(randomProductName, responseBody?.name);
         Assert.Equal(priceInDouble, responseBody?.price);
-        Assert.Equal(creationResponseBody.description, responseBody.description);
-        Assert.Equal(creationResponseBody.createdAt, responseBody.createdAt);
-        Assert.Equal(creationResponseBody.deletedAt, responseBody.deletedAt);
+        Assert.Equal(creationResponseBody?.description, responseBody?.description);
+        Assert.Equal(creationResponseBody?.createdAt, responseBody?.createdAt);
+        Assert.Equal(creationResponseBody?.deletedAt, responseBody?.deletedAt);
     }
 
     [Fact]
