@@ -31,8 +31,7 @@ public class DeleteProductIntegrationTesting : IClassFixture<WebApplicationFacto
         Assert.Equal("Product not found", responseBody?.message);
     }
 
-    [Fact]
-    public async Task WhenValidIdIsProvidedThenShouldGetNoContent()
+    private async Task<Product?> createProduct()
     {
         var randomProductName = new Faker().Commerce.ProductName();
         var randomPrice = new Faker().Random.Int(0, 999999);
@@ -45,7 +44,14 @@ public class DeleteProductIntegrationTesting : IClassFixture<WebApplicationFacto
         };
         var responseCreation = await _client.PostAsJsonAsync("/products", insertionData);
         var responseBodyCreation = await responseCreation.Content.ReadFromJsonAsync<Product>();
-        var id = responseBodyCreation?.id;
+        return responseBodyCreation;
+    }
+
+    [Fact]
+    public async Task WhenValidIdIsProvidedThenShouldGetNoContent()
+    {
+        var product = await createProduct();
+        var id = product?.id;
 
         var response = await _client.DeleteAsync($"/products/{id}");
 
@@ -55,22 +61,12 @@ public class DeleteProductIntegrationTesting : IClassFixture<WebApplicationFacto
     [Fact]
     public async Task WhenValidIdIsProvidedThenShouldDeleteProductFromDatabase()
     {
-        var randomProductName = new Faker().Commerce.ProductName();
-        var randomPrice = new Faker().Random.Int(0, 999999);
-        var randomDescription = new Faker().Lorem.Sentence();
-        var insertionData = new
-        {
-            name = randomProductName,
-            price = randomPrice,
-            description = randomDescription
-        };
-        var responseCreation = await _client.PostAsJsonAsync("/products", insertionData);
-        var responseBodyCreation = await responseCreation.Content.ReadFromJsonAsync<Product>();
-        var id = responseBodyCreation?.id;
+        var productCreated = await createProduct();
+        var id = productCreated?.id;
         var response = await _client.DeleteAsync($"/products/{id}");
         var context = new ApplicationContext();
 
-        var product = await context.Products.FindAsync(id);
+        var product = await context.Products.FindAsync(id) == null;
 
         Assert.Null(product);
     }
