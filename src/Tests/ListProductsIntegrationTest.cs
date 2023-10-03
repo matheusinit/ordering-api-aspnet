@@ -74,6 +74,6 @@ public class ListProductsIntegrationTest : IClassFixture<WebApplicationFactory<P
         var list = await _client.GetFromJsonAsync<List<Product>>("/products");
 
         var productPriceInDouble = product?.price / 100;
-        Assert.Equal(productPriceInDouble, list[0].price);
+        Assert.Equal(productPriceInDouble, list.Find(p => p.id == product?.id).price);
     }
 }
