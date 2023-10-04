@@ -29,6 +29,8 @@ jobs:
           echo "DB_PASSWORD=$DB_PASSWORD" >> .env
       - name: Up database container
         run: docker compose up -d database
+      - name: Docker container info
+        run: docker inspect ordering-api-database
       - name: Append DB_HOST to .env
         run: |
           export DB_HOST=$(docker inspect -f '{{ range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ordering-api-database)
