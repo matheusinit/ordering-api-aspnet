@@ -20,6 +20,7 @@ class UpdateResponseError
     public required string message { get; set; }
 }
 
+[Collection("Sequential")]
 public class UpdateProductIntegrationTesting : IClassFixture<WebApplicationFactory<Program>>
 {
     private WebApplicationFactory<Program> _factory = new WebApplicationFactory<Program>();

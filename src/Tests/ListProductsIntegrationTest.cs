@@ -18,6 +18,7 @@ class Product
     public DateTime? deletedAt { get; set; }
 }
 
+[Collection("Sequential")]
 public class ListProductsIntegrationTest : IClassFixture<WebApplicationFactory<Program>>
 {
     private WebApplicationFactory<Program> _factory = new WebApplicationFactory<Program>();

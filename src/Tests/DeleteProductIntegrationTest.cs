@@ -8,6 +8,7 @@ using Xunit;
 
 namespace OrderingApi.IntegrationTest;
 
+[Collection("Sequential")]
 public class DeleteProductIntegrationTesting : IClassFixture<WebApplicationFactory<Program>>
 {
     private WebApplicationFactory<Program> _factory = new WebApplicationFactory<Program>();
