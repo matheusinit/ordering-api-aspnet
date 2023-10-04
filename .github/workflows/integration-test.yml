@@ -33,7 +33,7 @@ jobs:
         run: docker inspect ordering-api-database
       - name: Append DB_HOST to .env
         run: |
-          export DB_HOST=$(docker inspect -f '{{ range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ordering-api-database)
+          echo "DB_HOST=$(docker inspect -f '{{ range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ordering-api-database)" >> .env
       - name: Show .env
         run: |
           cat .env
