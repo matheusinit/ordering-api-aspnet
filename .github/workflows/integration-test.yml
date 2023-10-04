@@ -40,8 +40,8 @@ jobs:
           echo $DB_HOST
       - name: Setup Dotnet Entity Framework
         run: |
-          # dotnet new tool-manifest
-          dotnet tool install -g dotnet-ef
+          dotnet new tool-manifest
+          dotnet tool install dotnet-ef
       - name: Apply migrations
         run: |
           export DB_HOST=$(docker inspect -f '{{ range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ordering-api-database)
