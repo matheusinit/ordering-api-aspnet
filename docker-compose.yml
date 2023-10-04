@@ -14,6 +14,7 @@ services:
       - 8000:80
     restart: always
   database:
+    container_name: ordering-api-database
     image: mcr.microsoft.com/mssql/server:2019-latest
     environment:
       SA_PASSWORD: ${DB_PASSWORD}

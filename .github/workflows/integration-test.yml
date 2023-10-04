@@ -31,6 +31,9 @@ jobs:
           echo "DB_PASSWORD=$DB_PASSWORD" >> .env
       - name: Up database container
         run: docker compose up -d database
+      - name: Show container IP
+        run: |
+          docker inspect -f '{{ range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ordering-api-database
       - name: Setup Dotnet Entity Framework
         run: |
           dotnet new tool-manifest
