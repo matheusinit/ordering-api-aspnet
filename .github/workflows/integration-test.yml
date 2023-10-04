@@ -31,7 +31,7 @@ jobs:
         run: docker compose up -d database
       - name: Append DB_HOST to .env
         run: |
-          echo "DB_HOST=$(docker inspect -f '{{ range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ordering-api-database)" >> .env
+          export DB_HOST=$(docker inspect -f '{{ range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ordering-api-database)
       - name: Setup Dotnet Entity Framework
         run: |
           dotnet new tool-manifest
