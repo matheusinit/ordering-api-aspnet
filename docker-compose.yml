@@ -12,6 +12,7 @@ services:
       NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_LICENSE_KEY}
     ports:
       - 8000:80
+    restart: always
   database:
     image: mcr.microsoft.com/mssql/server:2019-latest
     environment:
@@ -20,3 +21,4 @@ services:
       MSSQL_PID: "Developer"
     ports:
       - 1433:1433
+    restart: always
