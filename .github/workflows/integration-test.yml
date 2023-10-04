@@ -6,7 +6,7 @@ env:
   DB_USER: sa
   DB_PASSWORD: PandaNinja13.
 jobs:
-  build:
+  run-tests:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
