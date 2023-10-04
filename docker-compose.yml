@@ -15,7 +15,7 @@ services:
   database:
     image: mcr.microsoft.com/mssql/server:2019-latest
     environment:
-      SA_PASSWORD: "PandaNinja13."
+      SA_PASSWORD: ${DB_PASSWORD}
       ACCEPT_EULA: "Y"
       MSSQL_PID: "Developer"
     ports:
