@@ -40,8 +40,8 @@ jobs:
           echo $DB_HOST
       - name: Setup Dotnet Entity Framework
         run: |
-          dotnet new tool-manifest
-          dotnet tool install dotnet-ef
+          # dotnet new tool-manifest
+          dotnet tool install -g dotnet-ef
       - name: Apply migrations
         run: dotnet ef database update
       - name: Run integration tests
