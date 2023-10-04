@@ -10,6 +10,8 @@ public class ApplicationContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
+        DotEnv.Configure();
+
         if (!optionsBuilder.IsConfigured)
         {
             optionsBuilder.UseSqlServer(DatabaseConnection.GetConnectionString());
