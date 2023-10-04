@@ -2,6 +2,7 @@ using System.Net;
 using Bogus;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
+using Microsoft.EntityFrameworkCore;
 using OrderingApi.Data;
 using Xunit;
 
@@ -17,6 +18,9 @@ public class DeleteProductIntegrationTesting : IClassFixture<WebApplicationFacto
         _client = _factory
             .WithWebHostBuilder(builder => builder.UseSolutionRelativeContentRoot(".."))
             .CreateClient();
+
+        var context = new ApplicationContext();
+        context.Products.ExecuteDelete<Domain.Product>();
     }
 
     [Fact]

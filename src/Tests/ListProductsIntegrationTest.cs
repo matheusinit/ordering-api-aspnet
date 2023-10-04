@@ -75,6 +75,6 @@ public class ListProductsIntegrationTest : IClassFixture<WebApplicationFactory<P
 
         var productPriceInDecimal = Decimal.Divide((decimal)(product?.price), 100);
 
-        Assert.Equal(productPriceInDecimal, list.Find(p => p.id == product?.id).price);
+        Assert.Equal(productPriceInDecimal, list?.Find(p => p.id == product?.id)?.price);
     }
 }
