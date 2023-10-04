@@ -11,7 +11,7 @@ class Product
 {
     public required string id { get; set; }
     public required string name { get; set; }
-    public double price { get; set; }
+    public decimal price { get; set; }
     public string? description { get; set; }
     public DateTime createdAt { get; set; }
     public DateTime? updatedAt { get; set; }
@@ -54,14 +54,14 @@ public class ListProductsIntegrationTest : IClassFixture<WebApplicationFactory<P
 
         var list = await _client.GetFromJsonAsync<List<Product>>("/products");
 
-        var productPriceInDouble = product?.price / 100;
+        var productPriceInDecimal = Decimal.Divide((decimal)(product?.price), 100);
         Assert.NotEmpty(list);
         Assert.Equal(product?.name, list.Find(p => p.id == product?.id).name);
-        Assert.Equal(productPriceInDouble, list.Find(p => p.id == product?.id).price);
+        Assert.Equal(productPriceInDecimal, list.Find(p => p.id == product?.id).price);
     }
 
     [Fact]
-    public async Task WhenThereIsProductsStoredThenShouldGetProductPriceInDouble()
+    public async Task WhenThereIsProductsStoredThenShouldGetProductPriceInDecimal()
     {
         var randomProductName = new Faker().Commerce.ProductName();
         var randomPrice = new Faker().Random.Int(0, 999999);
@@ -73,7 +73,8 @@ public class ListProductsIntegrationTest : IClassFixture<WebApplicationFactory<P
 
         var list = await _client.GetFromJsonAsync<List<Product>>("/products");
 
-        var productPriceInDouble = product?.price / 100;
-        Assert.Equal(productPriceInDouble, list.Find(p => p.id == product?.id).price);
+        var productPriceInDecimal = Decimal.Divide((decimal)(product?.price), 100);
+
+        Assert.Equal(productPriceInDecimal, list.Find(p => p.id == product?.id).price);
     }
 }

@@ -27,8 +27,9 @@ public class ListProductsController : ControllerBase
             .ToList<Product>()
             .Select(p =>
             {
-                var priceInDouble = (p.Price / 100.00) ?? 0.00;
-                var priceFormatted = double.Round(priceInDouble, 2);
+                var priceInDecimal = Decimal.Divide((decimal)p?.Price, 100.0m);
+
+                var priceFormatted = decimal.Round(priceInDecimal, 2);
 
                 return new
                 {
