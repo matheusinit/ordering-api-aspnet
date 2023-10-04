@@ -1,8 +1,5 @@
 name: dotnet build
-on:
-  push:
-    branches-ignore:
-      - 'main'
+on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
