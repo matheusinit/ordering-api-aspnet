@@ -30,6 +30,12 @@ jobs:
           echo "DB_USER=$DB_USER" >> .env
           echo "DB_PASSWORD=$DB_PASSWORD" >> .env
       - name: Up database container
-        run: docker-compose up -d database
+        run: docker compose up -d database
+      - name: Setup Dotnet Entity Framework
+        run: |
+          dotnet new tool-manifest
+          dotnet tool install dotnet-ef
+      - name: Apply migrations
+        run: dotnet ef database update
       - name: Run integration tests
         run: make integration-test
