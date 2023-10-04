@@ -1,7 +1,6 @@
 name: dotnet integration tests
 on: [push]
 env:
-  DB_HOST: 172.20.0.3
   DB_PORT: 1433
   DB_NAME: master
   DB_USER: sa
@@ -24,16 +23,13 @@ jobs:
       - name: Create .env
         run: |
           touch .env
-          echo "DB_HOST=$DB_HOST" >> .env
+          echo "DB_HOST=$(docker inspect -f '{{ range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ordering-api-database)" >> .env
           echo "DB_PORT=$DB_PORT" >> .env
           echo "DB_NAME=$DB_NAME" >> .env
           echo "DB_USER=$DB_USER" >> .env
           echo "DB_PASSWORD=$DB_PASSWORD" >> .env
       - name: Up database container
         run: docker compose up -d database
-      - name: Show container IP
-        run: |
-          docker inspect -f '{{ range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ordering-api-database
       - name: Setup Dotnet Entity Framework
         run: |
           dotnet new tool-manifest
