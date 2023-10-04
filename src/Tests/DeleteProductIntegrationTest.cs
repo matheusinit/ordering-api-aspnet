@@ -66,7 +66,7 @@ public class DeleteProductIntegrationTesting : IClassFixture<WebApplicationFacto
         var response = await _client.DeleteAsync($"/products/{id}");
         var context = new ApplicationContext();
 
-        var product = await context.Products.FindAsync(id) == null;
+        var product = await context.Products.FindAsync(id);
 
         Assert.Null(product);
     }
