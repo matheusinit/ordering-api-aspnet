@@ -34,10 +34,6 @@ jobs:
       - name: Append DB_HOST to .env
         run: |
           echo "DB_HOST=$(docker inspect -f '{{ range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ordering-api-database)" >> .env
-      - name: Show .env
-        run: |
-          cat .env
-          echo $DB_HOST
       - name: Setup Dotnet Entity Framework
         run: |
           dotnet new tool-manifest
