@@ -23,13 +23,15 @@ jobs:
       - name: Create .env
         run: |
           touch .env
-          echo "DB_HOST=$(docker inspect -f '{{ range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ordering-api-database)" >> .env
           echo "DB_PORT=$DB_PORT" >> .env
           echo "DB_NAME=$DB_NAME" >> .env
           echo "DB_USER=$DB_USER" >> .env
           echo "DB_PASSWORD=$DB_PASSWORD" >> .env
       - name: Up database container
         run: docker compose up -d database
+      - name: Append DB_HOST to .env
+        run: |
+          echo "DB_HOST=$(docker inspect -f '{{ range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ordering-api-database)" >> .env
       - name: Setup Dotnet Entity Framework
         run: |
           dotnet new tool-manifest
