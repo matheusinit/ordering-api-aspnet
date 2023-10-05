@@ -64,7 +64,7 @@ public class DeleteProductIntegrationTesting : IClassFixture<WebApplicationFacto
     }
 
     [Fact]
-    public async Task WhenValidIdIsProvidedThenShouldDeleteProductFromDatabase()
+    public async Task WhenValidIdIsProvidedThenShouldSoftDeleteProductFromDatabase()
     {
         var productCreated = await createProduct();
         var id = productCreated?.id;
@@ -73,6 +73,6 @@ public class DeleteProductIntegrationTesting : IClassFixture<WebApplicationFacto
 
         var product = await context.Products.FindAsync(id);
 
-        Assert.Null(product);
+        Assert.NotNull<DateTime>(product?.DeletedAt);
     }
 }
