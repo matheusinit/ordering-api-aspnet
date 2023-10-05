@@ -1,10 +1,12 @@
 name: dotnet integration tests
 on: [push]
 env:
+  DB_HOST: localhost
   DB_PORT: 1433
   DB_NAME: master
   DB_USER: sa
   DB_PASSWORD: PandaNinja13.
+  TESTING: true
 jobs:
   run-tests:
     runs-on: ubuntu-latest
@@ -23,12 +25,14 @@ jobs:
       - name: Create .env.test
         run: |
           touch .env.test
+          echo "TESTING=$TESTING" >> .env.test
+          echo "DB_HOST=$DB_HOST" >> .env.test
           echo "DB_PORT=$DB_PORT" >> .env.test
           echo "DB_NAME=$DB_NAME" >> .env.test
           echo "DB_USER=$DB_USER" >> .env.test
           echo "DB_PASSWORD=$DB_PASSWORD" >> .env.test
       - name: Up database container
-        run: docker compose up -d database
+        run: docker compose --env-file .env.test up -d test-database
       - name: Docker container info
         run: docker inspect ordering-api-database
       - name: Append DB_HOST to .env.test
@@ -40,7 +44,6 @@ jobs:
           dotnet tool install dotnet-ef
       - name: Apply migrations
         run: |
-          export DB_HOST=$(docker inspect -f '{{ range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ordering-api-database)
-          dotnet ef database update
+          make migrations.testing.run
       - name: Run integration tests
         run: make test.integration.run
