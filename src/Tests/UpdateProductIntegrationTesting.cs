@@ -129,12 +129,11 @@ public class UpdateProductIntegrationTesting : IClassFixture<WebApplicationFacto
             $"/products/{id}",
             new ProductChanges { name = randomProductName }
         );
-        var priceInDecimal = Decimal.Divide((decimal)(productCreated?.price), 100.0m);
 
         var responseBody = await response.Content.ReadFromJsonAsync<ProductView>();
 
         Assert.Equal(randomProductName, responseBody?.name);
-        Assert.Equal(priceInDecimal, responseBody?.price);
+        Assert.Equal(productCreated?.price, responseBody?.price);
         Assert.Equal(productCreated?.description, responseBody?.description);
         Assert.Equal(productCreated?.createdAt, responseBody?.createdAt);
         Assert.Equal(productCreated?.deletedAt, responseBody?.deletedAt);

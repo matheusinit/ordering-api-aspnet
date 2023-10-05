@@ -10,6 +10,7 @@ using OrderingApi.Data;
 using OrderingApi.Controllers;
 using Microsoft.EntityFrameworkCore;
 using OrderingApi.View;
+using OrderingApi.Domain;
 
 class ResponseError
 {
@@ -91,7 +92,7 @@ public class CreateProductIntegrationTest
         var expected = new
         {
             name = randomProductName,
-            price = randomPrice,
+            price = Decimal.Divide(randomPrice, 100.0m),
             description = (string?)null
         };
 
@@ -123,7 +124,7 @@ public class CreateProductIntegrationTest
         var expected = new
         {
             name = randomProductName,
-            price = randomPrice,
+            price = Decimal.Divide(randomPrice, 100.0m),
             description = randomDescription
         };
 
@@ -176,5 +177,24 @@ public class CreateProductIntegrationTest
 
         var regex = @"\/products\/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}";
         Assert.Matches(regex, response.Headers.Location?.ToString());
+    }
+
+    [Fact]
+    public async Task WhenValidDataIsProvidedThenShouldReturnPriceInDecimal()
+    {
+        var randomProductName = new Faker().Commerce.ProductName();
+        var randomPrice = new Faker().Random.Int(0, 999999);
+        var randomDescription = new Faker().Lorem.Sentence();
+        var requestBody = new ProductRequestBody
+        {
+            name = randomProductName,
+            price = randomPrice,
+            description = randomDescription
+        };
+
+        var response = await _client.PostAsJsonAsync("/products", requestBody);
+
+        var responseBody = await response.Content.ReadFromJsonAsync<ProductView>();
+        Assert.Equal(Decimal.Divide(randomPrice, 100.0m), responseBody?.price);
     }
 }

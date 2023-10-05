@@ -45,10 +45,9 @@ public class ListProductsIntegrationTest : IClassFixture<WebApplicationFactory<P
 
         var list = await _client.GetFromJsonAsync<List<ProductView>>("/products");
 
-        var productPriceInDecimal = Decimal.Divide((decimal)(product?.price), 100);
         Assert.NotEmpty(list);
         Assert.Equal(product?.name, list.Find(p => p.id == product?.id).name);
-        Assert.Equal(productPriceInDecimal, list.Find(p => p.id == product?.id).price);
+        Assert.Equal(product?.price, list.Find(p => p.id == product?.id).price);
     }
 
     [Fact]
@@ -64,9 +63,7 @@ public class ListProductsIntegrationTest : IClassFixture<WebApplicationFactory<P
 
         var list = await _client.GetFromJsonAsync<List<ProductView>>("/products");
 
-        var productPriceInDecimal = Decimal.Divide((decimal)((product?.price) ?? 0.00m), 100);
-
         var priceFound = list?.Find(p => p.id == product?.id)?.price ?? 0.00m;
-        Assert.Equal<decimal>(productPriceInDecimal, priceFound);
+        Assert.Equal(product?.price, priceFound);
     }
 }
