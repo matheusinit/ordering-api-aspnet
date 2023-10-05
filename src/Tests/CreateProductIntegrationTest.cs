@@ -8,6 +8,7 @@ using Bogus;
 using System.Net.Http.Json;
 using OrderingApi.Data;
 using OrderingApi.Controllers;
+using Microsoft.EntityFrameworkCore;
 
 class ResponseError
 {
@@ -26,7 +27,9 @@ class ProductResponseBody
 }
 
 [Collection("Sequential")]
-public class CreateProductIntegrationTest : IClassFixture<WebApplicationFactory<Program>>
+public class CreateProductIntegrationTest
+    : IDisposable,
+        IClassFixture<WebApplicationFactory<Program>>
 {
     private WebApplicationFactory<Program> _factory = new WebApplicationFactory<Program>();
     private HttpClient _client;
@@ -36,6 +39,12 @@ public class CreateProductIntegrationTest : IClassFixture<WebApplicationFactory<
         _client = _factory
             .WithWebHostBuilder(builder => builder.UseSolutionRelativeContentRoot(".."))
             .CreateClient();
+    }
+
+    public void Dispose()
+    {
+        var context = new ApplicationContext();
+        context.Products.ExecuteDelete<Domain.Product>();
     }
 
     [Fact]
