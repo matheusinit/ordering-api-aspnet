@@ -10,7 +10,6 @@ using OrderingApi.Data;
 using OrderingApi.Controllers;
 using Microsoft.EntityFrameworkCore;
 using OrderingApi.View;
-using OrderingApi.Domain;
 
 class ResponseError
 {

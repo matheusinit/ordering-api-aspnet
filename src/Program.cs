@@ -1,5 +1,4 @@
 using Microsoft.EntityFrameworkCore;
-using OrderingApi.Controllers;
 using OrderingApi.Data;
 using OrderingApi.Config;
 

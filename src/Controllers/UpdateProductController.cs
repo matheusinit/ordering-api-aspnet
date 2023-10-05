@@ -1,7 +1,6 @@
 namespace OrderingApi.Controllers;
 
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using OrderingApi.Data;
 using OrderingApi.View;
