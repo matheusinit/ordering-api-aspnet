@@ -34,7 +34,7 @@ jobs:
       - name: Up database container
         run: docker compose --env-file .env.test up -d test-database
       - name: Docker container info
-        run: docker inspect ordering-api-database
+        run: docker inspect ordering-api-test-database
       - name: Setup Dotnet Entity Framework
         run: |
           dotnet new tool-manifest
