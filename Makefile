@@ -3,7 +3,7 @@ test.integration.run:
 	export $(cat .env.test | xargs)
 	dotnet test --filter "OrderingApi.IntegrationTest"
 
-test.unit:
+test.unit.run:
 	dotnet test --filter "OrderingApi.UnitTest"
 
 migrations.testing.run:

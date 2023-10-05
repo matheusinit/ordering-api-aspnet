@@ -16,4 +16,4 @@ jobs:
       - name: Build
         run: dotnet build
       - name: Run tests
-        run: make unit-test
+        run: make test.unit.run
