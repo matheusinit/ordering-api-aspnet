@@ -2,6 +2,7 @@ version: '3.7'
 services:
   api-rest:
     build: .
+    env_file: .env.production
     environment:
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}
@@ -16,6 +17,7 @@ services:
   database:
     container_name: ordering-api-database
     image: mcr.microsoft.com/mssql/server:2019-latest
+    env_file: .env.production
     environment:
       SA_PASSWORD: ${DB_PASSWORD}
       ACCEPT_EULA: "Y"
