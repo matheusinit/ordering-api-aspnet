@@ -13,7 +13,6 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<ApplicationContext>(
     options => options.UseSqlServer(DatabaseConnection.GetConnectionString())
 );
-builder.Services.AddScoped<CreateProductService, CreateProductService>();
 
 // Learn more about configuring Swagger/OpenAPI at
 // https://aka.ms/aspnetcore/swashbuckle

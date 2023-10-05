@@ -1,6 +1,8 @@
 namespace OrderingApi.Controllers;
 
 using Microsoft.AspNetCore.Mvc;
+using OrderingApi.Data;
+using OrderingApi.Domain;
 
 public class ProductRequestBody
 {
@@ -15,15 +17,15 @@ public class ProductRequestBody
 public class CreateProductController : ControllerBase
 {
     private readonly ILogger<CreateProductController> _logger;
-    private readonly CreateProductService _service;
+    private readonly ApplicationContext _context;
 
     public CreateProductController(
         ILogger<CreateProductController> logger,
-        CreateProductService service
+        ApplicationContext context
     )
     {
         _logger = logger;
-        _service = service;
+        _context = context;
     }
 
     [HttpPost]
@@ -31,14 +33,15 @@ public class CreateProductController : ControllerBase
     {
         try
         {
-            var input = new ProductServiceRequest
-            {
-                name = product.name,
-                price = product.price,
-                description = product.description
-            };
+            var productEntity = new Product(
+                _name: product?.name,
+                _price: product?.price,
+                _description: product?.description,
+                _id: Guid.NewGuid().ToString()
+            );
 
-            var productEntity = _service.createProduct(input);
+            _context.Products.Add(productEntity);
+            _context.SaveChanges();
 
             var uri = new Uri(
                 $"{Request.Scheme}://{Request.Host}{Request.PathBase}/products/{productEntity.Id}"

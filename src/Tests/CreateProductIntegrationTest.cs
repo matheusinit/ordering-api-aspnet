@@ -7,9 +7,7 @@ using Microsoft.AspNetCore.TestHost;
 using Bogus;
 using System.Net.Http.Json;
 using OrderingApi.Data;
-using Moq;
 using OrderingApi.Controllers;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 
 class ResponseError
 {
@@ -160,37 +158,6 @@ public class CreateProductIntegrationTest : IClassFixture<WebApplicationFactory<
         Assert.Equal(randomProductName, productStoredInDb?.Name);
         Assert.Equal(randomPrice, productStoredInDb?.Price);
         Assert.Equal(randomDescription, productStoredInDb?.Description);
-    }
-
-    [Fact]
-    public async Task WhenAnUnexpectedErrorIsThrownThenShouldReturnInternalServerError()
-    {
-        var randomProductName = new Faker().Commerce.ProductName();
-        var randomPrice = new Faker().Random.Int(0, 999999);
-        var randomDescription = new Faker().Lorem.Sentence();
-        var serviceRequest = new ProductServiceRequest
-        {
-            name = randomProductName,
-            price = randomPrice,
-            description = randomDescription
-        };
-        var mock = new Mock<CreateProductService>();
-        mock.Setup(s => s.createProduct(serviceRequest)).Throws<Exception>();
-        var _client = _factory
-            .WithWebHostBuilder(builder =>
-            {
-                builder.UseSolutionRelativeContentRoot("..");
-                builder.ConfigureServices(services =>
-                {
-                    services.RemoveAll<CreateProductService>();
-                    services.AddScoped<CreateProductService>(_ => mock.Object);
-                });
-            })
-            .CreateClient();
-
-        var response = await _client.PostAsJsonAsync("/products", serviceRequest);
-
-        Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
     }
 
     [Fact]
