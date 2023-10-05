@@ -10,6 +10,7 @@ I'm confortable enough with TDD, but MVC is new to me. I thought i knew it, but 
 The `double` type is not as precise as `decimal`. Due to this, `decimal` is recommended for when number precision is needed, for example currency, one of the domain object used in this project.
 
 ### References 
+- [Patterns of Enterprise Application Architecture - Martin Fowler](https://martinfowler.com/books/eaa.html)
 - [Floating-point numeric types (C# reference)](https://learn.microsoft.com/en-us/dotnet/csharp/language-reference/builtin-types/floating-point-numeric-types)
 - [Gui Archictecture](https://martinfowler.com/eaaDev/uiArchs.html#ModelViewController)
 - [observer pattern vs MVC](https://stackoverflow.com/questions/15563005/observer-pattern-vs-mvc)
