@@ -35,9 +35,6 @@ jobs:
         run: docker compose --env-file .env.test up -d test-database
       - name: Docker container info
         run: docker inspect ordering-api-database
-      - name: Append DB_HOST to .env.test
-        run: |
-          echo "DB_HOST=$(docker inspect -f '{{ range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ordering-api-database)" >> .env.test
       - name: Setup Dotnet Entity Framework
         run: |
           dotnet new tool-manifest
