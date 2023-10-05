@@ -19,7 +19,7 @@ class ProductResponseBody
 {
     public required string id { get; set; }
     public required string name { get; set; }
-    public int price { get; set; }
+    public decimal price { get; set; }
     public string? description { get; set; }
     public DateTime createdAt { get; set; }
     public DateTime? updatedAt { get; set; }
