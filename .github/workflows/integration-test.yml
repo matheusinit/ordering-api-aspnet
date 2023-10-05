@@ -20,20 +20,20 @@ jobs:
         run: dotnet restore
       - name: Build
         run: dotnet build
-      - name: Create .env
+      - name: Create .env.test
         run: |
-          touch .env
-          echo "DB_PORT=$DB_PORT" >> .env
-          echo "DB_NAME=$DB_NAME" >> .env
-          echo "DB_USER=$DB_USER" >> .env
-          echo "DB_PASSWORD=$DB_PASSWORD" >> .env
+          touch .env.test
+          echo "DB_PORT=$DB_PORT" >> .env.test
+          echo "DB_NAME=$DB_NAME" >> .env.test
+          echo "DB_USER=$DB_USER" >> .env.test
+          echo "DB_PASSWORD=$DB_PASSWORD" >> .env.test
       - name: Up database container
         run: docker compose up -d database
       - name: Docker container info
         run: docker inspect ordering-api-database
-      - name: Append DB_HOST to .env
+      - name: Append DB_HOST to .env.test
         run: |
-          echo "DB_HOST=$(docker inspect -f '{{ range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ordering-api-database)" >> .env
+          echo "DB_HOST=$(docker inspect -f '{{ range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ordering-api-database)" >> .env.test
       - name: Setup Dotnet Entity Framework
         run: |
           dotnet new tool-manifest
@@ -43,4 +43,4 @@ jobs:
           export DB_HOST=$(docker inspect -f '{{ range.NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ordering-api-database)
           dotnet ef database update
       - name: Run integration tests
-        run: make integration-test
+        run: make test.integration.run

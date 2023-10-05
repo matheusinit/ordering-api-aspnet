@@ -1,16 +1,20 @@
 
-integration-test: 
+test.integration.run:
+	export $(cat .env.test | xargs)
 	dotnet test --filter "OrderingApi.IntegrationTest"
 
-unit-test:
+test.unit:
 	dotnet test --filter "OrderingApi.UnitTest"
 
 migrations.testing.run:
-	BASH_ENV=./.env.test dotnet ef database update
+	export $(cat .env.test | xargs)
+	dotnet ef database update
 
 migrations.testing.show:
-	BASH_ENV=./.env.test dotnet ef migrations list 
+	export $(cat .env.test | xargs)
+	dotnet ef migrations list 
 
 run:
+	export $(cat .env | xargs)
 	dotnet run
 	
