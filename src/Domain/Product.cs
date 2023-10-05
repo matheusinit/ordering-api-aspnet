@@ -29,7 +29,7 @@ public class Product
         }
         else
         {
-            CreatedAt = _createdAt;
+            CreatedAt = (DateTime)_createdAt;
         }
 
         UpdatedAt = _updatedAt;
@@ -77,7 +77,7 @@ public class Product
         }
         get { return this.description; }
     }
-    public DateTime? CreatedAt { get; set; }
+    public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
     public DateTime? DeletedAt { get; set; }
 }

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using OrderingApi.Data;
+using OrderingApi.View;
 
 class UpdateRequestBody
 {
@@ -66,17 +67,9 @@ public class UpdateProductController : ControllerBase
         productFound.UpdatedAt = DateTime.Now;
         _context.SaveChanges();
 
-        var productView = new
-        {
-            Id = productFound.Id,
-            Name = productFound.Name,
-            Price = productFound.Price / 100.0,
-            Description = productFound.Description,
-            CreatedAt = productFound.CreatedAt,
-            UpdatedAt = productFound.UpdatedAt,
-            DeletedAt = productFound.DeletedAt
-        };
+        var view = new ProductView();
+        view.setValues(productFound);
 
-        return Ok(productView);
+        return Ok(view);
     }
 }
