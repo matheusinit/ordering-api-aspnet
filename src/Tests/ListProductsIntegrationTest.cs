@@ -6,17 +6,7 @@ using Microsoft.AspNetCore.TestHost;
 using Bogus;
 using OrderingApi.Data;
 using Microsoft.EntityFrameworkCore;
-
-class Product
-{
-    public required string id { get; set; }
-    public required string name { get; set; }
-    public decimal price { get; set; }
-    public string? description { get; set; }
-    public DateTime createdAt { get; set; }
-    public DateTime? updatedAt { get; set; }
-    public DateTime? deletedAt { get; set; }
-}
+using OrderingApi.View;
 
 [Collection("Sequential")]
 public class ListProductsIntegrationTest : IClassFixture<WebApplicationFactory<Program>>
@@ -37,7 +27,7 @@ public class ListProductsIntegrationTest : IClassFixture<WebApplicationFactory<P
     [Fact]
     public async Task WhenNoProductsExistThenShouldGetEmptyList()
     {
-        var list = await _client.GetFromJsonAsync<List<Product>>("/products");
+        var list = await _client.GetFromJsonAsync<List<ProductView>>("/products");
 
         Assert.Empty(list);
     }
@@ -51,9 +41,9 @@ public class ListProductsIntegrationTest : IClassFixture<WebApplicationFactory<P
             "/products",
             new { name = randomProductName, price = randomPrice }
         );
-        var product = await response.Content.ReadFromJsonAsync<Product>();
+        var product = await response.Content.ReadFromJsonAsync<ProductView>();
 
-        var list = await _client.GetFromJsonAsync<List<Product>>("/products");
+        var list = await _client.GetFromJsonAsync<List<ProductView>>("/products");
 
         var productPriceInDecimal = Decimal.Divide((decimal)(product?.price), 100);
         Assert.NotEmpty(list);
@@ -70,9 +60,9 @@ public class ListProductsIntegrationTest : IClassFixture<WebApplicationFactory<P
             "/products",
             new { name = randomProductName, price = randomPrice }
         );
-        var product = await response.Content.ReadFromJsonAsync<Product>();
+        var product = await response.Content.ReadFromJsonAsync<ProductView>();
 
-        var list = await _client.GetFromJsonAsync<List<Product>>("/products");
+        var list = await _client.GetFromJsonAsync<List<ProductView>>("/products");
 
         var productPriceInDecimal = Decimal.Divide((decimal)((product?.price) ?? 0.00m), 100);
 

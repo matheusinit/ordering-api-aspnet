@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using OrderingApi.Data;
+using OrderingApi.View;
 using Xunit;
 
 namespace OrderingApi.IntegrationTest;
@@ -36,7 +37,7 @@ public class DeleteProductIntegrationTesting : IClassFixture<WebApplicationFacto
         Assert.Equal("Product not found", responseBody?.message);
     }
 
-    private async Task<Product?> createProduct()
+    private async Task<ProductView?> createProduct()
     {
         var randomProductName = new Faker().Commerce.ProductName();
         var randomPrice = new Faker().Random.Int(0, 999999);
@@ -48,7 +49,7 @@ public class DeleteProductIntegrationTesting : IClassFixture<WebApplicationFacto
             description = randomDescription
         };
         var responseCreation = await _client.PostAsJsonAsync("/products", insertionData);
-        var responseBodyCreation = await responseCreation.Content.ReadFromJsonAsync<Product>();
+        var responseBodyCreation = await responseCreation.Content.ReadFromJsonAsync<ProductView>();
         return responseBodyCreation;
     }
 

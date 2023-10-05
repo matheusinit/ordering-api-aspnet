@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using OrderingApi.Data;
+using OrderingApi.View;
 using Xunit;
 
 class ProductChanges
@@ -36,7 +37,7 @@ public class UpdateProductIntegrationTesting : IClassFixture<WebApplicationFacto
         context.Products.ExecuteDelete<Domain.Product>();
     }
 
-    private async Task<Product?> PostProduct()
+    private async Task<ProductView?> PostProduct()
     {
         var randomProductName = new Faker().Commerce.ProductName();
         var randomPrice = new Faker().Random.Int(0, 999999);
@@ -48,7 +49,7 @@ public class UpdateProductIntegrationTesting : IClassFixture<WebApplicationFacto
             description = randomDescription
         };
         var response = await _client.PostAsJsonAsync("/products", insertionData);
-        var responseBody = await response.Content.ReadFromJsonAsync<Product>();
+        var responseBody = await response.Content.ReadFromJsonAsync<ProductView>();
         return responseBody;
     }
 
@@ -94,7 +95,7 @@ public class UpdateProductIntegrationTesting : IClassFixture<WebApplicationFacto
             new ProductChanges { name = randomProductName }
         );
 
-        var responseBody = await response.Content.ReadFromJsonAsync<Product>();
+        var responseBody = await response.Content.ReadFromJsonAsync<ProductView>();
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.Equal(randomProductName, responseBody?.name);
@@ -112,7 +113,7 @@ public class UpdateProductIntegrationTesting : IClassFixture<WebApplicationFacto
         );
         var randomPriceInDecimal = Decimal.Divide(randomPrice, 100.0m);
 
-        var responseBody = await response.Content.ReadFromJsonAsync<Product>();
+        var responseBody = await response.Content.ReadFromJsonAsync<ProductView>();
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.Equal(randomPriceInDecimal, responseBody?.price);
@@ -130,7 +131,7 @@ public class UpdateProductIntegrationTesting : IClassFixture<WebApplicationFacto
         );
         var priceInDecimal = Decimal.Divide((decimal)(productCreated?.price), 100.0m);
 
-        var responseBody = await response.Content.ReadFromJsonAsync<Product>();
+        var responseBody = await response.Content.ReadFromJsonAsync<ProductView>();
 
         Assert.Equal(randomProductName, responseBody?.name);
         Assert.Equal(priceInDecimal, responseBody?.price);
@@ -150,7 +151,7 @@ public class UpdateProductIntegrationTesting : IClassFixture<WebApplicationFacto
             new ProductChanges { name = randomProductName }
         );
 
-        var responseBody = await response.Content.ReadFromJsonAsync<Product>();
+        var responseBody = await response.Content.ReadFromJsonAsync<ProductView>();
 
         Assert.NotNull(responseBody?.updatedAt);
         Assert.IsType<DateTime>(responseBody?.updatedAt);
@@ -182,7 +183,7 @@ public class UpdateProductIntegrationTesting : IClassFixture<WebApplicationFacto
             new ProductChanges { description = randomDescription }
         );
 
-        var responseBody = await response.Content.ReadFromJsonAsync<Product>();
+        var responseBody = await response.Content.ReadFromJsonAsync<ProductView>();
 
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         Assert.Equal(randomDescription, responseBody?.description);

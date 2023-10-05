@@ -9,21 +9,11 @@ using System.Net.Http.Json;
 using OrderingApi.Data;
 using OrderingApi.Controllers;
 using Microsoft.EntityFrameworkCore;
+using OrderingApi.View;
 
 class ResponseError
 {
     public string? message { get; set; }
-}
-
-class ProductResponseBody
-{
-    public required string id { get; set; }
-    public required string name { get; set; }
-    public decimal price { get; set; }
-    public string? description { get; set; }
-    public DateTime createdAt { get; set; }
-    public DateTime? updatedAt { get; set; }
-    public DateTime? deletedAt { get; set; }
 }
 
 [Collection("Sequential")]
@@ -96,7 +86,7 @@ public class CreateProductIntegrationTest
             new { name = randomProductName, price = randomPrice }
         );
 
-        var responseBody = await sut.Content.ReadFromJsonAsync<ProductResponseBody>();
+        var responseBody = await sut.Content.ReadFromJsonAsync<ProductView>();
 
         var expected = new
         {
@@ -129,7 +119,7 @@ public class CreateProductIntegrationTest
             }
         );
 
-        var responseBody = await sut.Content.ReadFromJsonAsync<ProductResponseBody>();
+        var responseBody = await sut.Content.ReadFromJsonAsync<ProductView>();
         var expected = new
         {
             name = randomProductName,
@@ -159,7 +149,7 @@ public class CreateProductIntegrationTest
                 description = randomDescription
             }
         );
-        var product = await response.Content.ReadFromJsonAsync<ProductResponseBody>();
+        var product = await response.Content.ReadFromJsonAsync<ProductView>();
         var context = new ApplicationContext();
 
         var productStoredInDb = await context.Products.FindAsync(product?.id);
