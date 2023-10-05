@@ -36,6 +36,7 @@ msbuild.wrn
 # Envinronment variables
 .env
 .env.*
+!.env.example
 
 # Visual Studio 2015
 .vs/

@@ -11,6 +11,13 @@ public static class DatabaseConnection
             StringComparison.InvariantCultureIgnoreCase
         );
 
+        var testingEnvVar = Environment.GetEnvironmentVariable("TESTING");
+
+        var isInTestingEnvironment = testingEnvVar == "true";
+
+        if (isInTestingEnvironment)
+            return $"Server=127.0.0.1,1434;User Id=sa;Database=master;Trusted_Connection=false;Password=PandaNinja13.;TrustServerCertificate=true;";
+
         if (isDevelopment)
             return $"Server=127.0.0.1,1433;User Id=sa;Database=master;Trusted_Connection=false;Password=PandaNinja13.;TrustServerCertificate=true;";
 

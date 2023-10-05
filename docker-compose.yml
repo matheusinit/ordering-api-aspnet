@@ -2,7 +2,6 @@ version: '3.7'
 services:
   api-rest:
     build: .
-    env_file: .env.production
     environment:
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}
@@ -17,11 +16,20 @@ services:
   database:
     container_name: ordering-api-database
     image: mcr.microsoft.com/mssql/server:2019-latest
-    env_file: .env.production
     environment:
       SA_PASSWORD: ${DB_PASSWORD}
       ACCEPT_EULA: "Y"
       MSSQL_PID: "Developer"
     ports:
       - 1433:1433
+    restart: always
+  test-database:
+    container_name: ordering-api-test-database
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      SA_PASSWORD: ${DB_PASSWORD}
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: "Developer"
+    ports:
+      - 1434:1433
     restart: always
