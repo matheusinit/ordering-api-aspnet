@@ -3,6 +3,7 @@ namespace OrderingApi.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using OrderingApi.Data;
 using OrderingApi.Domain;
+using OrderingApi.View;
 
 public class ProductRequestBody
 {
@@ -43,11 +44,14 @@ public class CreateProductController : ControllerBase
             _context.Products.Add(productEntity);
             _context.SaveChanges();
 
+            var view = new ProductView();
+            view.setValues(productEntity);
+
             var uri = new Uri(
                 $"{Request.Scheme}://{Request.Host}{Request.PathBase}/products/{productEntity.Id}"
             );
 
-            return Created(uri, productEntity);
+            return Created(uri, view);
         }
         catch (Exception error)
         {
