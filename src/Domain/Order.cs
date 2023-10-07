@@ -7,7 +7,7 @@ public class Order
 
     public Order(Product _product)
     {
-        Product = product = _product;
+        Product = _product;
         Id = Guid.NewGuid().ToString();
     }
 
@@ -26,6 +26,8 @@ public class Order
             {
                 throw new ArgumentException("Product cannot be null");
             }
+
+            product = value;
         }
     }
 }
