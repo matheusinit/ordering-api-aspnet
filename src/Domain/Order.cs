@@ -9,6 +9,7 @@ public class Order
     {
         Product = _product;
         Id = Guid.NewGuid().ToString();
+        CreatedAt = DateTime.Now;
     }
 
     public string Id
@@ -30,4 +31,6 @@ public class Order
             product = value;
         }
     }
+
+    public DateTime CreatedAt { get; private set; }
 }
