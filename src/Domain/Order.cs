@@ -2,8 +2,8 @@ namespace OrderingApi.Domain;
 
 public class Order
 {
-    private Product product;
     private string id;
+    private Product product;
 
     public Order(Product _product)
     {
