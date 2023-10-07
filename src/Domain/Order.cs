@@ -14,7 +14,7 @@ public class Order
     public string Id
     {
         get => id;
-        set { id = value; }
+        private set { id = value; }
     }
 
     public Product Product
