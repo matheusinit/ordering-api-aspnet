@@ -33,4 +33,10 @@ public class Order
     }
 
     public DateTime CreatedAt { get; private set; }
+    public DateTime CanceledAt { get; private set; }
+
+    public void Cancel()
+    {
+        CanceledAt = DateTime.Now;
+    }
 }
