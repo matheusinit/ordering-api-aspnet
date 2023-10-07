@@ -33,4 +33,15 @@ public class OrderUnitTesting
 
         Assert.IsType<DateTime>(order.CreatedAt);
     }
+
+    [Fact]
+    public void WhenOrderIsCanceledThenShouldDefineCanceledAt()
+    {
+        var product = new Product(_name: "Rustic Frozen Pizza", _price: 0, _description: null);
+        var order = new Order(_product: product);
+
+        order.Cancel();
+
+        Assert.NotNull<DateTime>(order.CanceledAt);
+    }
 }
