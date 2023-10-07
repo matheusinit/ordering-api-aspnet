@@ -31,7 +31,7 @@ public class OrderUnitTesting
 
         var order = new Order(_product: product);
 
-        Assert.IsType<DateTime>(order.CreatedAt);
+        Assert.NotNull<DateTime>(order.CreatedAt);
     }
 
     [Fact]
