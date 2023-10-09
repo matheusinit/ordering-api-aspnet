@@ -37,8 +37,7 @@ public class CreateProductController : ControllerBase
             var productEntity = new Product(
                 _name: product?.name,
                 _price: product?.price,
-                _description: product?.description,
-                _id: Guid.NewGuid().ToString()
+                _description: product?.description
             );
 
             _context.Products.Add(productEntity);

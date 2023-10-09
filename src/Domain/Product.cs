@@ -14,11 +14,10 @@ public class Product
         string? _description = null,
         DateTime? _createdAt = null,
         DateTime? _updatedAt = null,
-        DateTime? _deletedAt = null,
-        string? _id = null
+        DateTime? _deletedAt = null
     )
     {
-        Id = _id;
+        Id = Guid.NewGuid().ToString();
         Name = name = _name;
         Price = price = _price;
         Description = description = _description;

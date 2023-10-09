@@ -64,12 +64,7 @@ public class OrderProductIntegrationTest : IClassFixture<WebApplicationFactory<P
     [Fact]
     public async Task WhenProductExistsThenShouldGetOk()
     {
-        var product = new Product(
-            _name: "Product 1",
-            _price: 100,
-            _description: "Description 1",
-            _id: Guid.NewGuid().ToString()
-        );
+        var product = new Product(_name: "Product 1", _price: 100, _description: "Description 1");
         _context.Products.Add(product);
         await _context.SaveChangesAsync();
 
