@@ -20,6 +20,11 @@ public class OrderProductController : ControllerBase
         _context = context;
     }
 
+    private string getProductStatus(OrderStatus orderStatus)
+    {
+        return "Not sent";
+    }
+
     [HttpPost]
     public ActionResult<HttpResponse> Order([FromBody] OrderProductRequest request)
     {
@@ -34,10 +39,12 @@ public class OrderProductController : ControllerBase
 
             var order = new Order(_product: product);
 
+            var statusString = getProductStatus(orderStatus: OrderStatus.NotSent);
+
             var view = new OrderView
             {
                 id = order.Id,
-                status = "Not sent",
+                status = statusString,
                 productId = order.Product.Id,
                 createdAt = order.CreatedAt,
                 updatedAt = order.UpdatedAt,

@@ -1,5 +1,7 @@
 namespace OrderingApi.Domain;
 
+using OrderingApi.Data;
+
 public class Order
 {
     private string id;
@@ -10,6 +12,7 @@ public class Order
         Product = _product;
         Id = Guid.NewGuid().ToString();
         CreatedAt = DateTime.Now;
+        Status = OrderStatus.NotSent;
     }
 
     public string Id
@@ -31,6 +34,8 @@ public class Order
             product = value;
         }
     }
+
+    public OrderStatus Status { get; private set; }
 
     public DateTime CreatedAt { get; private set; }
     public DateTime? UpdatedAt { get; private set; }
