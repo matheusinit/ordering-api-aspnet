@@ -4,11 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using OrderingApi.Data;
 using OrderingApi.Domain;
 
-// Usecase
-// 1. Check if product id is not nul
-// 2. Get product by id
-// 3. Create order
-
 public class OrderProductRequest
 {
     public string? productId { get; set; }

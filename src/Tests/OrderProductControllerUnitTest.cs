@@ -7,7 +7,6 @@ using OrderingApi.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using FluentAssertions;
 using OrderingApi.IntegrationTest;
-using System.Text;
 
 public class FakeApplicationContext : ApplicationContext
 {
