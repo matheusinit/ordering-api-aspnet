@@ -2,6 +2,12 @@ namespace OrderingApi.Controllers;
 
 using Microsoft.AspNetCore.Mvc;
 using OrderingApi.Data;
+using OrderingApi.Domain;
+
+// Usecase
+// 1. Check if product id is not nul
+// 2. Get product by id
+// 3. Create order
 
 public class OrderProductRequest
 {
@@ -19,11 +25,12 @@ public class OrderProductController : ControllerBase
         _context = context;
     }
 
-    public ActionResult<HttpResponse> Order([FromBody] OrderProductRequest order)
+    [HttpPost]
+    public ActionResult<HttpResponse> Order([FromBody] OrderProductRequest request)
     {
-        var product = _context.Products.Find(order.productId);
+        var product = _context.Products.Find(request.productId);
 
-        if (order.productId == null)
+        if (request.productId == null)
         {
             return BadRequest(error: new { message = "Product id is required" });
         }
@@ -33,6 +40,18 @@ public class OrderProductController : ControllerBase
             return NotFound(new { message = "Product not found" });
         }
 
-        return Ok(new { productId = product.Id });
+        var order = new Order(_product: product);
+
+        var view = new
+        {
+            id = order.Id,
+            status = "Not sent",
+            productId = order.Product.Id,
+            createdAt = order.CreatedAt,
+            updatedAt = order.UpdatedAt,
+            cancelAt = order.CanceledAt
+        };
+
+        return Ok(view);
     }
 }
