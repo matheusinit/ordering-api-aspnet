@@ -15,11 +15,20 @@ public class Order
         Status = OrderStatus.NotSent;
     }
 
+    private Order()
+    {
+        Id = Guid.NewGuid().ToString();
+        CreatedAt = DateTime.Now;
+        Status = OrderStatus.NotSent;
+    }
+
     public string Id
     {
         get => id;
         private set { id = value; }
     }
+
+    public string ProductId { get; set; }
 
     public Product Product
     {

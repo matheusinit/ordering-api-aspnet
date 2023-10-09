@@ -16,8 +16,20 @@ public class ApplicationContext : DbContext
         }
     }
 
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder
+            .Entity<Order>()
+            .HasOne(o => o.Product)
+            .WithMany(p => p.Orders)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        modelBuilder.Entity<Product>().HasMany(p => p.Orders).WithOne(o => o.Product);
+    }
+
     public ApplicationContext(DbContextOptions<ApplicationContext> options)
         : base(options) { }
 
     public DbSet<Product> Products { get; set; }
+    public DbSet<Order> Orders { get; set; }
 }

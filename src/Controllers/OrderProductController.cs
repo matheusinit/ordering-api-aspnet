@@ -39,6 +39,9 @@ public class OrderProductController : ControllerBase
 
             var order = new Order(_product: product);
 
+            _context.Orders.Add(order);
+            _context.SaveChanges();
+
             var statusString = getProductStatus(orderStatus: OrderStatus.NotSent);
 
             var view = new OrderView
