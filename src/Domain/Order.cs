@@ -33,7 +33,8 @@ public class Order
     }
 
     public DateTime CreatedAt { get; private set; }
-    public DateTime CanceledAt { get; private set; }
+    public DateTime? UpdatedAt { get; private set; }
+    public DateTime? CanceledAt { get; private set; }
 
     public void Cancel()
     {

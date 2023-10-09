@@ -6,15 +6,21 @@ using Microsoft.AspNetCore.TestHost;
 using OrderingApi.Data;
 using OrderingApi.Domain;
 using Xunit;
+using FluentAssertions;
+
+public enum OrderStatus
+{
+    NotSent
+}
 
 public class OrderProductResponseBody
 {
     public string id { get; set; }
     public string status { get; set; }
     public string productId { get; set; }
-    public string createdAt { get; set; }
-    public string updatedAt { get; set; }
-    public string deletedAt { get; set; }
+    public DateTime createdAt { get; set; }
+    public DateTime? updatedAt { get; set; }
+    public DateTime? cancelAt { get; set; }
 }
 
 [Collection("Sequential")]
@@ -56,7 +62,7 @@ public class OrderProductIntegrationTest : IClassFixture<WebApplicationFactory<P
     }
 
     [Fact]
-    public async Task WhenProductIdExistsThenShouldGetOk()
+    public async Task WhenProductExistsThenShouldGetOk()
     {
         var product = new Product(
             _name: "Product 1",
@@ -71,6 +77,11 @@ public class OrderProductIntegrationTest : IClassFixture<WebApplicationFactory<P
 
         var responseBody = await response.Content.ReadFromJsonAsync<OrderProductResponseBody>();
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        Assert.Equal(product.Id, responseBody?.productId);
+        responseBody?.id.Should().BeOfType<string>();
+        responseBody?.productId.Should().Be(product.Id);
+        responseBody?.status.Should().Be("Not sent");
+        responseBody?.createdAt.Should().NotBe(null);
+        responseBody?.updatedAt.Should().BeNull();
+        responseBody?.cancelAt.Should().BeNull();
     }
 }
