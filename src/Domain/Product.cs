@@ -3,7 +3,7 @@ namespace OrderingApi.Domain;
 public class Product
 {
     private string name;
-    private int? price;
+    private int price;
     private string? description;
 
     public Product() { }
@@ -18,9 +18,9 @@ public class Product
     )
     {
         Id = Guid.NewGuid().ToString();
-        Name = name = _name;
-        Price = price = _price;
-        Description = description = _description;
+        Name = _name;
+        Price = _price;
+        Description = _description;
 
         if (_createdAt == null)
         {
@@ -37,7 +37,7 @@ public class Product
 
     public string? Id { get; set; }
 
-    public virtual string Name
+    public string Name
     {
         set
         {
@@ -45,8 +45,10 @@ public class Product
             {
                 throw new ArgumentException("Name cannot be empty");
             }
+
+            name = value;
         }
-        get { return this.name; }
+        get => this.name;
     }
 
     public int? Price
@@ -57,12 +59,15 @@ public class Product
             {
                 throw new ArgumentException("Price cannot be empty");
             }
-            else if (value < 0)
+
+            if (value < 0)
             {
                 throw new ArgumentException("Price cannot be less than zero");
             }
+
+            price = (int)value;
         }
-        get { return this.price; }
+        get => this.price;
     }
 
     public string? Description
@@ -73,9 +78,12 @@ public class Product
             {
                 throw new ArgumentException("Description cannot be a empty string");
             }
+
+            description = value;
         }
-        get { return this.description; }
+        get => this.description;
     }
+
     public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; set; }
     public DateTime? DeletedAt { get; set; }
