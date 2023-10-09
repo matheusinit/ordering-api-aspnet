@@ -58,7 +58,7 @@ public class OrderProductController : ControllerBase
                 return NotFound(new { message = "Product not found" });
             }
 
-            return StatusCode(500);
+            return StatusCode(500, new { message = "An inner error occurred. Try again later." });
         }
     }
 }
