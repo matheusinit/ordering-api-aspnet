@@ -28,30 +28,37 @@ public class OrderProductController : ControllerBase
     [HttpPost]
     public ActionResult<HttpResponse> Order([FromBody] OrderProductRequest request)
     {
-        var product = _context.Products.Find(request.productId);
-
-        if (request.productId == null)
+        try
         {
-            return BadRequest(error: new { message = "Product id is required" });
+            var product = _context.Products.Find(request.productId);
+
+            if (request.productId == null)
+            {
+                return BadRequest(error: new { message = "Product id is required" });
+            }
+
+            var order = new Order(_product: product);
+
+            var view = new OrderView
+            {
+                id = order.Id,
+                status = "Not sent",
+                productId = order.Product.Id,
+                createdAt = order.CreatedAt,
+                updatedAt = order.UpdatedAt,
+                cancelAt = order.CanceledAt
+            };
+
+            return Ok(view);
         }
-
-        if (product == null)
+        catch (Exception error)
         {
-            return NotFound(new { message = "Product not found" });
+            if (error.Message == "Product cannot be null")
+            {
+                return NotFound(new { message = "Product not found" });
+            }
+
+            return StatusCode(500);
         }
-
-        var order = new Order(_product: product);
-
-        var view = new OrderView
-        {
-            id = order.Id,
-            status = "Not sent",
-            productId = order.Product.Id,
-            createdAt = order.CreatedAt,
-            updatedAt = order.UpdatedAt,
-            cancelAt = order.CanceledAt
-        };
-
-        return Ok(view);
     }
 }
