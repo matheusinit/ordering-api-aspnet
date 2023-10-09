@@ -42,7 +42,7 @@ public class OrderProductController : ControllerBase
 
         var order = new Order(_product: product);
 
-        var view = new
+        var view = new OrderView
         {
             id = order.Id,
             status = "Not sent",
