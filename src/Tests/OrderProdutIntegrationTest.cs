@@ -27,4 +27,17 @@ public class OrderProductIntegrationTest : IClassFixture<WebApplicationFactory<P
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
         Assert.Equal(responseBody?.message, "Product id is required");
     }
+
+    [Fact]
+    public async Task WhenProductIdDoesNotExistThenShouldGetNotFound()
+    {
+        var response = await _client.PostAsJsonAsync(
+            "/order",
+            new { productId = Guid.NewGuid().ToString() }
+        );
+
+        var responseBody = await response.Content.ReadFromJsonAsync<ResponseError>();
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        Assert.Equal(responseBody?.message, "Product not found");
+    }
 }
