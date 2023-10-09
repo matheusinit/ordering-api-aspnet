@@ -34,7 +34,11 @@ public class UpdateProductIntegrationTesting : IClassFixture<WebApplicationFacto
             .CreateClient();
 
         var context = new ApplicationContext();
-        context.Products.ExecuteDelete<Domain.Product>();
+
+        var products = context.Products.ToList();
+        products.Select(p => context.Products.Remove(p));
+
+        // context.Products.ExecuteDelete<Domain.Product>();
     }
 
     private async Task<ProductView?> PostProduct()

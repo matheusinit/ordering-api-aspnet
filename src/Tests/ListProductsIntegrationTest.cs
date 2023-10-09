@@ -16,12 +16,14 @@ public class ListProductsIntegrationTest : IClassFixture<WebApplicationFactory<P
 
     public ListProductsIntegrationTest()
     {
+        var context = new ApplicationContext();
+
+        context.Orders.ExecuteDelete();
+        context.Products.ExecuteDelete();
+
         _client = _factory
             .WithWebHostBuilder(builder => builder.UseSolutionRelativeContentRoot(".."))
             .CreateClient();
-
-        var context = new ApplicationContext();
-        context.Products.ExecuteDelete<Domain.Product>();
     }
 
     [Fact]

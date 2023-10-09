@@ -34,7 +34,9 @@ public class CreateProductIntegrationTest
     public void Dispose()
     {
         var context = new ApplicationContext();
-        context.Products.ExecuteDelete<Domain.Product>();
+
+        var products = context.Products.ToList();
+        products.Select(p => context.Products.Remove(p));
     }
 
     [Fact]

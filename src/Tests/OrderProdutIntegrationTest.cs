@@ -79,4 +79,18 @@ public class OrderProductIntegrationTest : IClassFixture<WebApplicationFactory<P
         responseBody?.updatedAt.Should().BeNull();
         responseBody?.cancelAt.Should().BeNull();
     }
+
+    [Fact]
+    public async Task WhenValidInputIsProvidedThenShouldStoreOrderInDatabase()
+    {
+        var product = new Product(_name: "Product 1", _price: 100, _description: "Description 1");
+        _context.Products.Add(product);
+        await _context.SaveChangesAsync();
+        var response = await _client.PostAsJsonAsync("/order", new { productId = product.Id });
+        var responseBody = await response.Content.ReadFromJsonAsync<OrderProductResponseBody>();
+
+        var order = await _context.Orders.FindAsync(responseBody?.id);
+
+        order.Should().NotBeNull();
+    }
 }
