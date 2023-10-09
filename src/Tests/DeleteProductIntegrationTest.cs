@@ -24,8 +24,6 @@ public class DeleteProductIntegrationTesting : IClassFixture<WebApplicationFacto
         var context = new ApplicationContext();
         var products = context.Products.ToList();
         products.Select(p => context.Products.Remove(p));
-
-        // context.Products.ExecuteDelete<Domain.Product>();
     }
 
     [Fact]

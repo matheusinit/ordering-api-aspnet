@@ -37,8 +37,6 @@ public class UpdateProductIntegrationTesting : IClassFixture<WebApplicationFacto
 
         var products = context.Products.ToList();
         products.Select(p => context.Products.Remove(p));
-
-        // context.Products.ExecuteDelete<Domain.Product>();
     }
 
     private async Task<ProductView?> PostProduct()
