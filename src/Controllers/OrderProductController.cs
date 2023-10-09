@@ -33,6 +33,6 @@ public class OrderProductController : ControllerBase
             return NotFound(new { message = "Product not found" });
         }
 
-        return Ok();
+        return Ok(new { productId = product.Id });
     }
 }
