@@ -29,7 +29,7 @@ public class DeleteProductIntegrationTesting : IClassFixture<WebApplicationFacto
     [Fact]
     public async Task WhenIdOfNonExistentProductIsProvidedThenShouldGetNotFound()
     {
-        var invalidId = 1;
+        var invalidId = Guid.NewGuid().ToString();
         var response = await _client.DeleteAsync($"/products/{invalidId}");
 
         var responseBody = await response.Content.ReadFromJsonAsync<ResponseError>();
