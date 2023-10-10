@@ -10,7 +10,7 @@ public class OrderProductRequest
 }
 
 [ApiController]
-[Route("/order")]
+[Route("/orders")]
 public class OrderProductController : ControllerBase
 {
     private readonly ApplicationContext _context;

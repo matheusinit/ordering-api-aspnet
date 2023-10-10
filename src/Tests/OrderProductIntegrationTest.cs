@@ -41,7 +41,7 @@ public class OrderProductIntegrationTest : IClassFixture<WebApplicationFactory<P
     [Fact]
     public async Task WhenProductIdIsNotProvidedThenShouldGetBadRequest()
     {
-        var response = await _client.PostAsJsonAsync("/order", new { });
+        var response = await _client.PostAsJsonAsync("/orders", new { });
 
         var responseBody = await response.Content.ReadFromJsonAsync<ResponseError>();
         Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
@@ -52,7 +52,7 @@ public class OrderProductIntegrationTest : IClassFixture<WebApplicationFactory<P
     public async Task WhenProductIdDoesNotExistThenShouldGetNotFound()
     {
         var response = await _client.PostAsJsonAsync(
-            "/order",
+            "/orders",
             new { productId = Guid.NewGuid().ToString() }
         );
 
@@ -68,7 +68,7 @@ public class OrderProductIntegrationTest : IClassFixture<WebApplicationFactory<P
         _context.Products.Add(product);
         await _context.SaveChangesAsync();
 
-        var response = await _client.PostAsJsonAsync("/order", new { productId = product.Id });
+        var response = await _client.PostAsJsonAsync("/orders", new { productId = product.Id });
 
         var responseBody = await response.Content.ReadFromJsonAsync<OrderProductResponseBody>();
         Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -86,7 +86,7 @@ public class OrderProductIntegrationTest : IClassFixture<WebApplicationFactory<P
         var product = new Product(_name: "Product 1", _price: 100, _description: "Description 1");
         _context.Products.Add(product);
         await _context.SaveChangesAsync();
-        var response = await _client.PostAsJsonAsync("/order", new { productId = product.Id });
+        var response = await _client.PostAsJsonAsync("/orders", new { productId = product.Id });
         var responseBody = await response.Content.ReadFromJsonAsync<OrderProductResponseBody>();
 
         var order = await _context.Orders.FindAsync(responseBody?.id);
