@@ -20,18 +20,21 @@ public class ListOrdersController : ControllerBase
     {
         var orders = _context.Orders.ToList();
 
-        var view = orders.Select(
-            o =>
-                new OrderView
-                {
-                    id = o.Id,
-                    status = "Not sent",
-                    productId = o.ProductId,
-                    createdAt = o.CreatedAt,
-                    updatedAt = o.UpdatedAt,
-                    cancelAt = o.CanceledAt
-                }
-        );
+        var view = orders.Select(o =>
+        {
+            var view = new OrderView();
+
+            view.setValues(
+                _id: o.Id,
+                _status: o.Status,
+                _productId: o.ProductId,
+                _createdAt: o.CreatedAt,
+                _updatedAt: o.UpdatedAt,
+                _canceledAt: o.CanceledAt
+            );
+
+            return view;
+        });
 
         return Ok(view);
     }

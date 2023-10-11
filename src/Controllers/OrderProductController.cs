@@ -20,11 +20,6 @@ public class OrderProductController : ControllerBase
         _context = context;
     }
 
-    private string getProductStatus(OrderStatus orderStatus)
-    {
-        return "Not sent";
-    }
-
     [HttpPost]
     public ActionResult<HttpResponse> Order([FromBody] OrderProductRequest request)
     {
@@ -42,17 +37,16 @@ public class OrderProductController : ControllerBase
             _context.Orders.Add(order);
             _context.SaveChanges();
 
-            var statusString = getProductStatus(orderStatus: OrderStatus.NotSent);
+            var view = new OrderView();
 
-            var view = new OrderView
-            {
-                id = order.Id,
-                status = statusString,
-                productId = order.Product.Id,
-                createdAt = order.CreatedAt,
-                updatedAt = order.UpdatedAt,
-                cancelAt = order.CanceledAt
-            };
+            view.setValues(
+                order.Id,
+                order.Status,
+                order.ProductId,
+                order.CreatedAt,
+                order.UpdatedAt,
+                order.CanceledAt
+            );
 
             return Ok(view);
         }
