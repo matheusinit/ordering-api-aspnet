@@ -1,8 +1,7 @@
-using System.Collections;
+namespace OrderingApi.Controllers;
+
 using Microsoft.AspNetCore.Mvc;
 using OrderingApi.Data;
-
-namespace OrderingApi.Controllers;
 
 [ApiController]
 [Route("/orders")]
