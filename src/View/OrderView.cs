@@ -7,7 +7,7 @@ public class OrderView
     public string productId { get; set; }
     public DateTime createdAt { get; set; }
     public DateTime? updatedAt { get; set; }
-    public DateTime? cancelAt { get; set; }
+    public DateTime? canceledAt { get; set; }
 
     public void setValues(
         string _id,
@@ -23,7 +23,7 @@ public class OrderView
         this.productId = _productId;
         this.createdAt = _createdAt;
         this.updatedAt = _updatedAt;
-        this.cancelAt = _canceledAt;
+        this.canceledAt = _canceledAt;
     }
 
     private string setStatusOnEnum(OrderStatus status)

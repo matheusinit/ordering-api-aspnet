@@ -20,7 +20,7 @@ public class OrderProductResponseBody
     public string productId { get; set; }
     public DateTime createdAt { get; set; }
     public DateTime? updatedAt { get; set; }
-    public DateTime? cancelAt { get; set; }
+    public DateTime? canceledAt { get; set; }
 }
 
 [Collection("Sequential")]
@@ -77,7 +77,7 @@ public class OrderProductIntegrationTest : IClassFixture<WebApplicationFactory<P
         responseBody?.status.Should().Be("Not sent");
         responseBody?.createdAt.Should().NotBe(null);
         responseBody?.updatedAt.Should().BeNull();
-        responseBody?.cancelAt.Should().BeNull();
+        responseBody?.canceledAt.Should().BeNull();
     }
 
     [Fact]
