@@ -63,6 +63,22 @@ public class CancelOrderIntegrationTest : IClassFixture<WebApplicationFactory<Pr
         responseBody?.message.Should().Be("Order is already canceled");
     }
 
+    [Fact]
+    public async Task WhenValidIdIsProvidedThenShouldGetOk()
+    {
+        var product = AddProductToDb();
+        var order = CreateOrder(product);
+        AddOrder(order);
+        await SaveInDb();
+
+        var id = order.Id;
+        var httpResponse = await _client.PatchAsync($"/orders/{id}", null);
+        var responseBody = await httpResponse.Content.ReadFromJsonAsync<OrderView>();
+
+        httpResponse.StatusCode.Should().Be((System.Net.HttpStatusCode)StatusCodes.Status200OK);
+        responseBody?.Should().NotBeNull();
+    }
+
     private Product AddProductToDb()
     {
         var product = new Product(_name: "Product 1", _price: 100, _description: "Description 1");
