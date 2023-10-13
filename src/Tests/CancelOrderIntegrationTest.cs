@@ -47,13 +47,11 @@ public class CancelOrderIntegrationTest : IClassFixture<WebApplicationFactory<Pr
     [Fact]
     public async Task WhenIdOfCanceledOrderIsProvidedThenShouldGetBadRequest()
     {
-        var product = new Product(_name: "Product 1", _price: 100, _description: "Description 1");
-        var order = new Order(product);
+        var product = AddProductToDb();
+        var order = CreateOrder(product);
         order.Cancel();
-
-        _context.Products.Add(product);
-        _context.Orders.Add(order);
-        await _context.SaveChangesAsync();
+        AddOrder(order);
+        await SaveInDb();
 
         var id = order.Id;
         var httpResponse = await _client.PatchAsync($"/orders/{id}", null);
@@ -63,5 +61,30 @@ public class CancelOrderIntegrationTest : IClassFixture<WebApplicationFactory<Pr
             .Should()
             .Be((System.Net.HttpStatusCode)StatusCodes.Status400BadRequest);
         responseBody?.message.Should().Be("Order is already canceled");
+    }
+
+    private Product AddProductToDb()
+    {
+        var product = new Product(_name: "Product 1", _price: 100, _description: "Description 1");
+        _context.Products.Add(product);
+
+        return product;
+    }
+
+    private Order CreateOrder(Product product)
+    {
+        var order = new Order(product);
+
+        return order;
+    }
+
+    private void AddOrder(Order order)
+    {
+        _context.Orders.Add(order);
+    }
+
+    private async Task SaveInDb()
+    {
+        await _context.SaveChangesAsync();
     }
 }
