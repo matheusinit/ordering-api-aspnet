@@ -4,7 +4,6 @@ using System.Net;
 using Bogus;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
-using Microsoft.EntityFrameworkCore;
 using OrderingApi.Data;
 using OrderingApi.View;
 using Xunit;

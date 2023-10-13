@@ -8,7 +8,6 @@ using Bogus;
 using System.Net.Http.Json;
 using OrderingApi.Data;
 using OrderingApi.Controllers;
-using Microsoft.EntityFrameworkCore;
 using OrderingApi.View;
 
 class ResponseError
