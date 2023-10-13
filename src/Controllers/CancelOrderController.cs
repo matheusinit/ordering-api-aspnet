@@ -36,6 +36,9 @@ public class CancelOrderController : ControllerBase
             return BadRequest(error: new { message = "Order is already canceled" });
         }
 
+        context.Entry(order).Property("CanceledAt").CurrentValue = DateTime.Now;
+        context.SaveChanges();
+
         var view = new OrderView();
 
         view.setValues(
