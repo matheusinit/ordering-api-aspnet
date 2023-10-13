@@ -112,6 +112,22 @@ public class CancelOrderIntegrationTest : IClassFixture<WebApplicationFactory<Pr
     }
 
     [Fact]
+    public async Task WhenOrderIsCanceledThenShouldReturnStatusAsCanceled()
+    {
+        var product = AddProductToDb();
+        var order = CreateOrder(product);
+        order.CreatedAt = DateTime.Now.AddHours(-23);
+        AddOrder(order);
+        await SaveInDb();
+
+        var id = order.Id;
+        var httpResponse = await _client.PatchAsync($"/orders/{id}", null);
+        var responseBody = await httpResponse.Content.ReadFromJsonAsync<OrderView>();
+
+        responseBody?.status.Should().Be("Canceled");
+    }
+
+    [Fact]
     public async Task WhenValidIdIsProvidedThenShouldReturnCanceledDateTimeDefined()
     {
         var product = AddProductToDb();
