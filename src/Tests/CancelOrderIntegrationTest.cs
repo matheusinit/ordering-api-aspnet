@@ -94,6 +94,24 @@ public class CancelOrderIntegrationTest : IClassFixture<WebApplicationFactory<Pr
     }
 
     [Fact]
+    public async Task WhenOrderHasMoreThan24HoursSinceCreationThenShouldGetBadRequest()
+    {
+        var product = AddProductToDb();
+        var order = CreateOrder(product);
+        order.CreatedAt = DateTime.Now.AddHours(-24).AddMinutes(-1);
+        AddOrder(order);
+        await SaveInDb();
+
+        var id = order.Id;
+        var httpResponse = await _client.PatchAsync($"/orders/{id}", null);
+        var responseBody = await httpResponse.Content.ReadFromJsonAsync<ResponseError>();
+
+        responseBody?.message
+            .Should()
+            .Be("Order cannot be canceled. Order was made more than 24 hours ago");
+    }
+
+    [Fact]
     public async Task WhenValidIdIsProvidedThenShouldReturnCanceledDateTimeDefined()
     {
         var product = AddProductToDb();
