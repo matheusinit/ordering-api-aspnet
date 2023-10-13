@@ -21,11 +21,16 @@ public class CancelOrderIntegrationTest : IClassFixture<WebApplicationFactory<Pr
             .CreateClient();
 
         _context = new ApplicationContext();
-        var orders = _context.Orders.ToList();
-        orders.Select(p => _context.Orders.Remove(p));
+
+        DeleteAllOrderRecords();
     }
 
     public void Dispose()
+    {
+        DeleteAllOrderRecords();
+    }
+
+    private void DeleteAllOrderRecords()
     {
         var orders = _context.Orders.ToList();
         orders.Select(p => _context.Orders.Remove(p));
