@@ -1,6 +1,7 @@
 namespace OrderingApi.Domain;
 
 using OrderingApi.Data;
+using NodaTime;
 
 public class Order
 {
@@ -46,12 +47,20 @@ public class Order
 
     public OrderStatus Status { get; private set; }
 
-    public DateTime CreatedAt { get; private set; }
+    public DateTime CreatedAt { get; set; }
     public DateTime? UpdatedAt { get; private set; }
     public DateTime? CanceledAt { get; private set; }
 
     public void Cancel()
     {
+        LocalDateTime localCreatedAt = LocalDateTime.FromDateTime(CreatedAt);
+        var aDayAfterOrderWasMade = localCreatedAt.PlusHours(24);
+
+        if (aDayAfterOrderWasMade < LocalDateTime.FromDateTime(DateTime.Now))
+        {
+            throw new Exception("Order cannot be canceled. Order was made more than 24 hours ago");
+        }
+
         CanceledAt = DateTime.Now;
     }
 }
