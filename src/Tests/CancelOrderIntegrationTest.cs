@@ -27,4 +27,15 @@ public class CancelOrderIntegrationTest : IClassFixture<WebApplicationFactory<Pr
             .Should()
             .Be((System.Net.HttpStatusCode)StatusCodes.Status400BadRequest);
     }
+
+    [Fact]
+    public async Task WhenIdOfNonExistingOrderIsProvidedThenShouldGetNotFound()
+    {
+        var id = Guid.NewGuid().ToString();
+        var httpResponse = await _client.PatchAsync($"/orders/{id}", null);
+
+        httpResponse.StatusCode
+            .Should()
+            .Be((System.Net.HttpStatusCode)StatusCodes.Status404NotFound);
+    }
 }
