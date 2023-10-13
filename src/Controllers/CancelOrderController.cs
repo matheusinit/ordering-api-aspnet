@@ -7,8 +7,15 @@ using Microsoft.AspNetCore.Mvc;
 public class CancelOrderController : ControllerBase
 {
     [HttpPatch("{id}")]
-    public ActionResult<HttpResponse> Cancel()
+    public ActionResult<HttpResponse> Cancel(string id)
     {
-        return BadRequest();
+        var result = Guid.Empty;
+        var isIdAGuid = Guid.TryParse(id, out result);
+        if (!isIdAGuid)
+        {
+            return BadRequest();
+        }
+
+        return NotFound();
     }
 }
