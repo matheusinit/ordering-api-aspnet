@@ -61,6 +61,7 @@ public class Order
             throw new Exception("Order cannot be canceled. Order was made more than 24 hours ago");
         }
 
+        Status = OrderStatus.Canceled;
         CanceledAt = DateTime.Now;
     }
 }

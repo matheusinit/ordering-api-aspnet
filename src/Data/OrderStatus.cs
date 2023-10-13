@@ -2,5 +2,6 @@ namespace OrderingApi.Data;
 
 public enum OrderStatus
 {
-    NotSent
+    NotSent,
+    Canceled
 }

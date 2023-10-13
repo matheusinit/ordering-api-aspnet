@@ -31,6 +31,7 @@ public class OrderView
         return status switch
         {
             OrderStatus.NotSent => "Not sent",
+            OrderStatus.Canceled => "Canceled",
             _ => throw new Exception("Invalid status order"),
         };
     }
