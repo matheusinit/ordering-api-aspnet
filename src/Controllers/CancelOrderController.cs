@@ -1,11 +1,19 @@
 namespace OrderingApi.Controllers;
 
 using Microsoft.AspNetCore.Mvc;
+using OrderingApi.Data;
 
 [ApiController]
 [Route("/orders")]
 public class CancelOrderController : ControllerBase
 {
+    private readonly ApplicationContext context;
+
+    public CancelOrderController(ApplicationContext context)
+    {
+        this.context = context;
+    }
+
     [HttpPatch("{id}")]
     public ActionResult<HttpResponse> Cancel(string id)
     {
@@ -16,6 +24,18 @@ public class CancelOrderController : ControllerBase
             return BadRequest();
         }
 
-        return NotFound();
+        var order = context.Orders.Find(id);
+
+        if (order == null)
+        {
+            return NotFound();
+        }
+
+        if (order.CanceledAt != null)
+        {
+            return BadRequest(error: new { message = "Order is already canceled" });
+        }
+
+        return BadRequest();
     }
 }
