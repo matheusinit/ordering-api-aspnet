@@ -7,7 +7,8 @@ using OrderingApi.Data;
 using OrderingApi.Domain;
 using Xunit;
 
-public class CancelOrderIntegrationTest : IClassFixture<WebApplicationFactory<Program>>
+[Collection("Sequential")]
+public class CancelOrderIntegrationTest : IClassFixture<WebApplicationFactory<Program>>, IDisposable
 {
     private WebApplicationFactory<Program> _factory = new WebApplicationFactory<Program>();
     private HttpClient _client;
@@ -20,6 +21,14 @@ public class CancelOrderIntegrationTest : IClassFixture<WebApplicationFactory<Pr
             .CreateClient();
 
         _context = new ApplicationContext();
+        var orders = _context.Orders.ToList();
+        orders.Select(p => _context.Orders.Remove(p));
+    }
+
+    public void Dispose()
+    {
+        var orders = _context.Orders.ToList();
+        orders.Select(p => _context.Orders.Remove(p));
     }
 
     [Fact]
@@ -77,6 +86,21 @@ public class CancelOrderIntegrationTest : IClassFixture<WebApplicationFactory<Pr
 
         httpResponse.StatusCode.Should().Be((System.Net.HttpStatusCode)StatusCodes.Status200OK);
         responseBody?.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task WhenValidIdIsProvidedThenShouldReturnCanceledDateTimeDefined()
+    {
+        var product = AddProductToDb();
+        var order = CreateOrder(product);
+        AddOrder(order);
+        await SaveInDb();
+
+        var id = order.Id;
+        var httpResponse = await _client.PatchAsync($"/orders/{id}", null);
+        var responseBody = await httpResponse.Content.ReadFromJsonAsync<OrderView>();
+
+        responseBody?.canceledAt.Should().NotBeNull();
     }
 
     private Product AddProductToDb()
