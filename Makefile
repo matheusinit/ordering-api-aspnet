@@ -5,6 +5,12 @@ test.integration.run:
 test.unit.run:
 	dotnet test --filter "OrderingApi.UnitTest"
 
+migrations.show:
+	dotnet ef migrations list --context ApplicationContext
+
+migrations.run:
+	dotnet ef database update --context ApplicationContext
+
 migrations.testing.run:
 	TESTING=true dotnet ef database update --context ApplicationContext
 
