@@ -1,0 +1,54 @@
+Running 30s test @ http://localhost/api
+  1 threads and 800 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    98.02ms   51.92ms 820.83ms   82.68%
+    Req/Sec     5.21k     2.36k    7.97k    64.00%
+  13245 requests in 2.74s, 2.72MB read
+  Socket errors: connect 0, read 15045, write 0, timeout 0
+Requests/sec:   4834.57
+Transfer/sec:      0.99MB
+Running 30s test @ http://localhost/api
+  1 threads and 800 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    87.94ms   51.82ms 937.82ms   87.76%
+    Req/Sec     5.91k     2.08k    8.82k    77.18%
+  175652 requests in 30.02s, 36.02MB read
+  Socket errors: connect 0, read 121596, write 0, timeout 0
+Requests/sec:   5851.74
+Transfer/sec:      1.20MB
+Running 30s test @ http://localhost/api
+  1 threads and 800 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    93.90ms   52.45ms 923.30ms   86.20%
+    Req/Sec     5.52k     2.05k    8.45k    77.85%
+  163965 requests in 30.02s, 33.62MB read
+  Socket errors: connect 0, read 112775, write 0, timeout 0
+Requests/sec:   5461.03
+Transfer/sec:      1.12MB
+Running 30s test @ http://localhost/api
+  1 threads and 800 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   100.48ms   51.70ms 941.54ms   83.94%
+    Req/Sec     5.09k     1.96k    7.80k    74.07%
+  151376 requests in 30.07s, 31.04MB read
+  Socket errors: connect 0, read 122538, write 0, timeout 0
+Requests/sec:   5034.93
+Transfer/sec:      1.03MB
+Running 30s test @ http://localhost/api
+  1 threads and 800 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    99.89ms   54.73ms 992.26ms   86.07%
+    Req/Sec     5.19k     1.89k    7.68k    75.68%
+  153535 requests in 30.04s, 31.48MB read
+  Socket errors: connect 0, read 115140, write 0, timeout 0
+Requests/sec:   5111.32
+Transfer/sec:      1.05MB
+Running 30s test @ http://localhost/api
+  1 threads and 800 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    99.06ms   60.24ms 986.36ms   85.45%
+    Req/Sec     5.26k     1.89k    8.26k    75.42%
+  155941 requests in 30.03s, 31.97MB read
+  Socket errors: connect 0, read 112884, write 0, timeout 0
+Requests/sec:   5192.80
+Transfer/sec:      1.06MB

@@ -1,0 +1,45 @@
+Running 30s test @ http://localhost/products
+  1 threads and 600 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   529.15ms  355.67ms   1.98s    66.20%
+    Req/Sec     0.95k   585.05     2.93k    72.32%
+  27747 requests in 30.07s, 39.11MB read
+  Socket errors: connect 0, read 179527, write 0, timeout 4
+Requests/sec:    922.70
+Transfer/sec:      1.30MB
+Running 30s test @ http://localhost/products
+  1 threads and 600 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   544.73ms  490.29ms   2.00s    71.44%
+    Req/Sec     0.95k   542.61     2.80k    71.38%
+  28238 requests in 30.09s, 39.80MB read
+  Socket errors: connect 0, read 181859, write 0, timeout 34
+Requests/sec:    938.52
+Transfer/sec:      1.32MB
+Running 30s test @ http://localhost/products
+  1 threads and 600 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   584.54ms  565.05ms   2.00s    77.22%
+    Req/Sec     0.86k   536.30     2.99k    79.73%
+  25464 requests in 30.03s, 35.89MB read
+  Socket errors: connect 0, read 192989, write 0, timeout 146
+Requests/sec:    848.02
+Transfer/sec:      1.20MB
+Running 30s test @ http://localhost/products
+  1 threads and 600 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   539.92ms  520.59ms   2.00s    76.41%
+    Req/Sec     0.95k   562.13     3.12k    73.56%
+  27965 requests in 30.02s, 39.42MB read
+  Socket errors: connect 0, read 168928, write 0, timeout 338
+Requests/sec:    931.55
+Transfer/sec:      1.31MB
+Running 30s test @ http://localhost/products
+  1 threads and 600 connections
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency   509.45ms  305.50ms   1.71s    61.31%
+    Req/Sec     0.96k   520.37     2.72k    69.36%
+  28531 requests in 30.05s, 40.22MB read
+  Socket errors: connect 0, read 171203, write 0, timeout 8
+Requests/sec:    949.48
+Transfer/sec:      1.34MB
