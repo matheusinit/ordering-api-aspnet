@@ -19,11 +19,8 @@ services:
       CORECLR_PROFILER: ${CORECLR_PROFILER}
       NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_LICENSE_KEY}
     ports:
-      - 8000-8001:80
+      - 8000:80
     restart: always
-    deploy:
-      mode: replicated
-      replicas: 2
   database:
     container_name: ordering-api-database
     image: mcr.microsoft.com/mssql/server:2019-latest
