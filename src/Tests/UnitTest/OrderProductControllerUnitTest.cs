@@ -7,10 +7,19 @@ using OrderingApi.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using FluentAssertions;
 using OrderingApi.IntegrationTest;
+using OrderingApi.Producers;
 
 public class FakeApplicationContext : ApplicationContext
 {
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        throw new Exception("An inner error occurred");
+    }
+}
+
+public class FakeOrderingProducer : OrderingProducer
+{
+    public Task<bool> SendOrderThroughMessageQueue(string topic, OrderToProduce order)
     {
         throw new Exception("An inner error occurred");
     }
@@ -22,7 +31,11 @@ public class OrderProductControllerUnitTesting
     public void WhenErrorIsThrownThenShouldReturnInternalServerError()
     {
         var fakeApplicationContext = new FakeApplicationContext();
-        var sut = new OrderProductController(context: fakeApplicationContext);
+        var fakeOrderingProducer = new FakeOrderingProducer();
+        var sut = new OrderProductController(
+            context: fakeApplicationContext,
+            producer: fakeOrderingProducer
+        );
 
         var response = sut.Order(new OrderProductRequest { productId = Guid.NewGuid().ToString() });
 
