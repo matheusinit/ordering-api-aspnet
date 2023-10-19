@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using OrderingApi.Data;
 using OrderingApi.Config;
+using OrderingApi.Producers;
 
 DotEnv.Configure();
 
@@ -8,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+builder.Services.AddSingleton<OrderingProducer, OrderingKafkaProducer>();
 builder.Services.AddControllers();
 builder.Services.AddDbContext<ApplicationContext>(
     options => options.UseSqlServer(DatabaseConnection.GetConnectionString())

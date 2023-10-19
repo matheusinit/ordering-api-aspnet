@@ -3,6 +3,7 @@ namespace OrderingApi.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using OrderingApi.Data;
 using OrderingApi.Domain;
+using OrderingApi.Producers;
 
 public class OrderProductRequest
 {
@@ -14,14 +15,16 @@ public class OrderProductRequest
 public class OrderProductController : ControllerBase
 {
     private readonly ApplicationContext _context;
+    private readonly OrderingProducer _producer;
 
-    public OrderProductController(ApplicationContext context)
+    public OrderProductController(ApplicationContext context, OrderingProducer producer)
     {
         _context = context;
+        _producer = producer;
     }
 
     [HttpPost]
-    public ActionResult<HttpResponse> Order([FromBody] OrderProductRequest request)
+    public async Task<ActionResult<HttpResponse>> Order([FromBody] OrderProductRequest request)
     {
         try
         {
@@ -46,6 +49,21 @@ public class OrderProductController : ControllerBase
                 order.CreatedAt,
                 order.UpdatedAt,
                 order.CanceledAt
+            );
+
+            var orderToSendThroughMessageQueue = new OrderToProduce
+            {
+                id = order.Id,
+                productId = order.ProductId,
+                status = order.Status,
+                createdAt = order.CreatedAt,
+                updatedAt = order.UpdatedAt,
+                canceledAt = order.CanceledAt
+            };
+
+            await _producer.SendOrderThroughMessageQueue(
+                "ordering",
+                orderToSendThroughMessageQueue
             );
 
             return Ok(view);
