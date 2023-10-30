@@ -3,6 +3,7 @@ namespace OrderingApi.Producers;
 using System.Net;
 using System.Text.Json;
 using Confluent.Kafka;
+using OrderingApi.Config;
 
 public class OrderingKafkaProducer : OrderingProducer
 {
@@ -10,7 +11,7 @@ public class OrderingKafkaProducer : OrderingProducer
     {
         var config = new ProducerConfig
         {
-            BootstrapServers = "localhost:9092",
+            BootstrapServers = Env.KAFKA_URL,
             ClientId = Dns.GetHostName()
         };
 

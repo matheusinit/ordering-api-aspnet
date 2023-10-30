@@ -11,6 +11,7 @@ public static class Env
     public static readonly string? DB_NAME = DotEnv.Get("DB_NAME");
     public static readonly string? DB_USER = DotEnv.Get("DB_USER");
     public static readonly string? DB_PASSWORD = DotEnv.Get("DB_PASSWORD");
+    public static readonly string? KAFKA_URL = DotEnv.Get("KAFKA_URL");
 }
 
 public static class DotEnv
