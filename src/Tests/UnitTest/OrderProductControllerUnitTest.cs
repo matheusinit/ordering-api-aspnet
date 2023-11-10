@@ -28,7 +28,7 @@ public class FakeOrderingProducer : OrderingProducer
 public class OrderProductControllerUnitTesting
 {
     [Fact]
-    public void WhenErrorIsThrownThenShouldReturnInternalServerError()
+    public async void WhenErrorIsThrownThenShouldReturnInternalServerError()
     {
         var fakeApplicationContext = new FakeApplicationContext();
         var fakeOrderingProducer = new FakeOrderingProducer();
@@ -37,7 +37,9 @@ public class OrderProductControllerUnitTesting
             producer: fakeOrderingProducer
         );
 
-        var response = sut.Order(new OrderProductRequest { productId = Guid.NewGuid().ToString() });
+        var response = await sut.Order(
+            new OrderProductRequest { productId = Guid.NewGuid().ToString() }
+        );
 
         var result = response.Result.As<ObjectResult>();
         var value = result.Value as ResponseError;
