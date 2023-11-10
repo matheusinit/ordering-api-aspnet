@@ -7,6 +7,7 @@ using OrderingApi.Data;
 using OrderingApi.Domain;
 using Xunit;
 using FluentAssertions;
+using OrderingApi.Producers;
 
 public enum OrderStatus
 {
@@ -23,6 +24,14 @@ public class OrderProductResponseBody
     public DateTime? canceledAt { get; set; }
 }
 
+public class FakeOrderingProducer : OrderingProducer
+{
+    public Task<bool> SendOrderThroughMessageQueue(string topic, OrderToProduce order)
+    {
+        return Task.FromResult(true);
+    }
+}
+
 [Collection("Sequential")]
 public class OrderProductIntegrationTest : IClassFixture<WebApplicationFactory<Program>>
 {
@@ -33,7 +42,14 @@ public class OrderProductIntegrationTest : IClassFixture<WebApplicationFactory<P
     public OrderProductIntegrationTest()
     {
         _client = _factory
-            .WithWebHostBuilder(builder => builder.UseSolutionRelativeContentRoot(".."))
+            .WithWebHostBuilder(builder =>
+            {
+                builder.UseSolutionRelativeContentRoot("..");
+                builder.ConfigureTestServices(services =>
+                {
+                    services.AddSingleton<OrderingProducer, FakeOrderingProducer>();
+                });
+            })
             .CreateClient();
         _context = new ApplicationContext();
     }
