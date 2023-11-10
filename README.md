@@ -18,4 +18,4 @@ The `double` type is not as precise as `decimal`. Due to this, `decimal` is reco
 
 ### Credits
 
-Made with love by matheusinit 
+Made with ♥️ by matheusinit 
