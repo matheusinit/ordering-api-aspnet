@@ -12,7 +12,7 @@ using OrderingApi.Data;
 namespace OrderingApi.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20231120153024_InitialMigration")]
+    [Migration("20231120192408_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
