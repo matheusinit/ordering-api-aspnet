@@ -8,6 +8,8 @@ services:
       - api-rest
     ports:
       - "80:80"
+    networks:
+      - ecommerce-network
   api-rest:
     build: .
     environment:
@@ -18,9 +20,12 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
       CORECLR_PROFILER: ${CORECLR_PROFILER}
       NEW_RELIC_LICENSE_KEY: ${NEW_RELIC_LICENSE_KEY}
+      KAFKA_URL: ${KAFKA_URL}
     ports:
       - 8000:80
     restart: always
+    networks:
+      - ecommerce-network
   database:
     container_name: ordering-api-database
     image: mcr.microsoft.com/mssql/server:2019-latest
@@ -31,6 +36,8 @@ services:
     ports:
       - 1433:1433
     restart: always
+    networks:
+      - ecommerce-network
   test-database:
     container_name: ordering-api-test-database
     image: mcr.microsoft.com/mssql/server:2019-latest
@@ -41,3 +48,8 @@ services:
     ports:
       - 1434:1433
     restart: always
+    networks:
+      - ecommerce-network
+networks:
+  ecommerce-network:
+    external: true
