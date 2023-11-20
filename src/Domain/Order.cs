@@ -13,6 +13,10 @@ public class Order
         Id = Guid.NewGuid().ToString();
         CreatedAt = DateTime.Now;
         Status = OrderStatus.NotSent;
+        if (productId == null)
+        {
+            throw new ArgumentException("ProductId cannot be null");
+        }
         ProductId = productId.ToString();
     }
 

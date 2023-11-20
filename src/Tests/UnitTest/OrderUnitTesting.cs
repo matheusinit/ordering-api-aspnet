@@ -7,7 +7,7 @@ using Xunit;
 public class OrderUnitTesting
 {
     [Fact]
-    public void WhenProductIsNotProvidedThenShouldThrow()
+    public void WhenProductIdIsNotProvidedThenShouldThrow()
     {
         var exception = Record.Exception(() => new Order(null));
 
