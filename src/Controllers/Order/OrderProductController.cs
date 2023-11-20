@@ -1,5 +1,6 @@
 namespace OrderingApi.Controllers;
 
+using System;
 using Microsoft.AspNetCore.Mvc;
 using OrderingApi.Data;
 using OrderingApi.Domain;
@@ -28,14 +29,12 @@ public class OrderProductController : ControllerBase
     {
         try
         {
-            var product = _context.Products.Find(request.productId);
-
             if (request.productId == null)
             {
                 return BadRequest(error: new { message = "Product id is required" });
             }
 
-            var order = new Order(_product: product);
+            var order = new Order(request.productId);
 
             _context.Orders.Add(order);
             _context.SaveChanges();

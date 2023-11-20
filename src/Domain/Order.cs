@@ -2,25 +2,18 @@ namespace OrderingApi.Domain;
 
 using OrderingApi.Data;
 using NodaTime;
+using System;
 
 public class Order
 {
     private string id;
-    private Product product;
 
-    public Order(Product _product)
-    {
-        Product = _product;
-        Id = Guid.NewGuid().ToString();
-        CreatedAt = DateTime.Now;
-        Status = OrderStatus.NotSent;
-    }
-
-    private Order()
+    public Order(String productId)
     {
         Id = Guid.NewGuid().ToString();
         CreatedAt = DateTime.Now;
         Status = OrderStatus.NotSent;
+        ProductId = productId.ToString();
     }
 
     public string Id
@@ -30,20 +23,6 @@ public class Order
     }
 
     public string ProductId { get; set; }
-
-    public Product Product
-    {
-        get => product;
-        private set
-        {
-            if (value == null)
-            {
-                throw new ArgumentException("Product cannot be null");
-            }
-
-            product = value;
-        }
-    }
 
     public OrderStatus Status { get; private set; }
 

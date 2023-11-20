@@ -4,10 +4,14 @@ using System.Net;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using OrderingApi.Data;
-using OrderingApi.Domain;
 using Xunit;
 using FluentAssertions;
 using OrderingApi.Producers;
+
+class ResponseError
+{
+    public string? message { get; set; }
+}
 
 public enum OrderStatus
 {
@@ -65,44 +69,10 @@ public class OrderProductIntegrationTest : IClassFixture<WebApplicationFactory<P
     }
 
     [Fact]
-    public async Task WhenProductIdDoesNotExistThenShouldGetNotFound()
-    {
-        var response = await _client.PostAsJsonAsync(
-            "/orders",
-            new { productId = Guid.NewGuid().ToString() }
-        );
-
-        var responseBody = await response.Content.ReadFromJsonAsync<ResponseError>();
-        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-        Assert.Equal(responseBody?.message, "Product not found");
-    }
-
-    [Fact]
-    public async Task WhenProductExistsThenShouldGetOk()
-    {
-        var product = new Product(_name: "Product 1", _price: 100, _description: "Description 1");
-        _context.Products.Add(product);
-        await _context.SaveChangesAsync();
-
-        var response = await _client.PostAsJsonAsync("/orders", new { productId = product.Id });
-
-        var responseBody = await response.Content.ReadFromJsonAsync<OrderProductResponseBody>();
-        Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-        responseBody?.id.Should().BeOfType<string>();
-        responseBody?.productId.Should().Be(product.Id);
-        responseBody?.status.Should().Be("Not sent");
-        responseBody?.createdAt.Should().NotBe(null);
-        responseBody?.updatedAt.Should().BeNull();
-        responseBody?.canceledAt.Should().BeNull();
-    }
-
-    [Fact]
     public async Task WhenValidInputIsProvidedThenShouldStoreOrderInDatabase()
     {
-        var product = new Product(_name: "Product 1", _price: 100, _description: "Description 1");
-        _context.Products.Add(product);
-        await _context.SaveChangesAsync();
-        var response = await _client.PostAsJsonAsync("/orders", new { productId = product.Id });
+        var productId = Guid.NewGuid();
+        var response = await _client.PostAsJsonAsync("/orders", new { productId = productId });
         var responseBody = await response.Content.ReadFromJsonAsync<OrderProductResponseBody>();
 
         var order = await _context.Orders.FindAsync(responseBody?.id);

@@ -37,15 +37,8 @@ public class ListOrdersIntegrationTest : IClassFixture<WebApplicationFactory<Pro
     public async Task WhenThereIsOrdersStoredThenShouldGetListWithOrders()
     {
         var context = new ApplicationContext();
-        var product = new Product
-        {
-            Id = "1",
-            Name = "Product 1",
-            Price = 100
-        };
-        context.Products.Add(product);
-
-        var order = new Domain.Order(_product: product);
+        var productId = Guid.NewGuid().ToString();
+        var order = new Domain.Order(productId);
         context.Orders.Add(order);
         await context.SaveChangesAsync();
 

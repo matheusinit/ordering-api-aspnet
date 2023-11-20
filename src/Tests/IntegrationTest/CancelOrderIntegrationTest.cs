@@ -1,5 +1,6 @@
 namespace OrderingApi.IntegrationTest;
 
+using System;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
@@ -61,8 +62,8 @@ public class CancelOrderIntegrationTest : IClassFixture<WebApplicationFactory<Pr
     [Fact]
     public async Task WhenIdOfCanceledOrderIsProvidedThenShouldGetBadRequest()
     {
-        var product = AddProductToDb();
-        var order = CreateOrder(product);
+        var productId = Guid.NewGuid().ToString();
+        var order = CreateOrder(productId);
         order.Cancel();
         AddOrder(order);
         await SaveInDb();
@@ -80,8 +81,8 @@ public class CancelOrderIntegrationTest : IClassFixture<WebApplicationFactory<Pr
     [Fact]
     public async Task WhenValidIdIsProvidedThenShouldGetOk()
     {
-        var product = AddProductToDb();
-        var order = CreateOrder(product);
+        var productId = Guid.NewGuid().ToString();
+        var order = CreateOrder(productId);
         AddOrder(order);
         await SaveInDb();
 
@@ -96,8 +97,8 @@ public class CancelOrderIntegrationTest : IClassFixture<WebApplicationFactory<Pr
     [Fact]
     public async Task WhenOrderHasMoreThan24HoursSinceCreationThenShouldGetBadRequest()
     {
-        var product = AddProductToDb();
-        var order = CreateOrder(product);
+        var productId = Guid.NewGuid().ToString();
+        var order = CreateOrder(productId);
         order.CreatedAt = DateTime.Now.AddHours(-24).AddMinutes(-1);
         AddOrder(order);
         await SaveInDb();
@@ -114,8 +115,8 @@ public class CancelOrderIntegrationTest : IClassFixture<WebApplicationFactory<Pr
     [Fact]
     public async Task WhenOrderIsCanceledThenShouldReturnStatusAsCanceled()
     {
-        var product = AddProductToDb();
-        var order = CreateOrder(product);
+        var productId = Guid.NewGuid().ToString();
+        var order = CreateOrder(productId);
         order.CreatedAt = DateTime.Now.AddHours(-23);
         AddOrder(order);
         await SaveInDb();
@@ -130,8 +131,8 @@ public class CancelOrderIntegrationTest : IClassFixture<WebApplicationFactory<Pr
     [Fact]
     public async Task WhenValidIdIsProvidedThenShouldReturnCanceledDateTimeDefined()
     {
-        var product = AddProductToDb();
-        var order = CreateOrder(product);
+        var productId = Guid.NewGuid().ToString();
+        var order = CreateOrder(productId);
         AddOrder(order);
         await SaveInDb();
 
@@ -142,17 +143,9 @@ public class CancelOrderIntegrationTest : IClassFixture<WebApplicationFactory<Pr
         responseBody?.canceledAt.Should().NotBeNull();
     }
 
-    private Product AddProductToDb()
+    private Order CreateOrder(String productId)
     {
-        var product = new Product(_name: "Product 1", _price: 100, _description: "Description 1");
-        _context.Products.Add(product);
-
-        return product;
-    }
-
-    private Order CreateOrder(Product product)
-    {
-        var order = new Order(product);
+        var order = new Order(productId);
 
         return order;
     }
