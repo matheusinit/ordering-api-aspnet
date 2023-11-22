@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using OrderingApi.Data;
 using OrderingApi.Config;
 using OrderingApi.Producers;
+using OrderingApi.BackgroundServices;
 using OrderingApi.Consumers;
 
 DotEnv.Configure();
@@ -11,7 +12,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 
 builder.Services.AddSingleton<OrderingProducer, OrderingKafkaProducer>();
-builder.Services.AddHostedService<StockKafkaConsumer>();
+builder.Services.AddSingleton<StockConsumer, StockKafkaConsumer>();
+builder.Services.AddHostedService<StockConsumerBackgroundService>();
 builder.Services.AddControllers();
 builder.Services.AddDbContext<ApplicationContext>(
     options => options.UseSqlServer(DatabaseConnection.GetConnectionString())

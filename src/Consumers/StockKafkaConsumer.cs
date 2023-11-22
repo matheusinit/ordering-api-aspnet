@@ -2,16 +2,17 @@ namespace OrderingApi.Consumers;
 
 using System.Threading;
 using Confluent.Kafka;
+using OrderingApi.Config;
 
-public class StockKafkaConsumer : IHostedService
+public class StockKafkaConsumer : StockConsumer
 {
-    public Task StartAsync(CancellationToken cancellationToken)
+    public Task Consume()
     {
         var config = new ConsumerConfig
         {
-            BootstrapServers = "0.0.0.0:9092",
+            BootstrapServers = Env.KAFKA_URL,
             AutoOffsetReset = AutoOffsetReset.Earliest,
-            GroupId = "stock.quantity"
+            GroupId = "stock.quantity-00"
         };
 
         using (var consumer = new ConsumerBuilder<Ignore, string>(config).Build())
@@ -33,11 +34,6 @@ public class StockKafkaConsumer : IHostedService
             }
         }
 
-        return Task.CompletedTask;
-    }
-
-    public Task StopAsync(CancellationToken cancellationToken)
-    {
         return Task.CompletedTask;
     }
 }
