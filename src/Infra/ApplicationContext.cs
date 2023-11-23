@@ -16,10 +16,17 @@ public class ApplicationContext : DbContext
         }
     }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder) { }
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Stock>(stock =>
+        {
+            stock.HasKey(s => s.id);
+        });
+    }
 
     public ApplicationContext(DbContextOptions<ApplicationContext> options)
         : base(options) { }
 
     public DbSet<Order> Orders { get; set; }
+    public DbSet<Stock> Stocks { get; set; }
 }

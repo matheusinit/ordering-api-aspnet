@@ -10,14 +10,13 @@ DotEnv.Configure();
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
-builder.Services.AddSingleton<OrderingProducer, OrderingKafkaProducer>();
-builder.Services.AddSingleton<StockConsumer, StockKafkaConsumer>();
-builder.Services.AddHostedService<StockConsumerBackgroundService>();
-builder.Services.AddControllers();
 builder.Services.AddDbContext<ApplicationContext>(
     options => options.UseSqlServer(DatabaseConnection.GetConnectionString())
 );
+builder.Services.AddSingleton<OrderingProducer, OrderingKafkaProducer>();
+builder.Services.AddHostedService<StockConsumerBackgroundService>();
+builder.Services.AddSingleton<StockConsumer, StockKafkaConsumer>();
+builder.Services.AddControllers();
 
 // Learn more about configuring Swagger/OpenAPI at
 // https://aka.ms/aspnetcore/swashbuckle
