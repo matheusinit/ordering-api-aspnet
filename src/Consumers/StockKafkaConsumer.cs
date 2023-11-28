@@ -9,6 +9,7 @@ using OrderingApi.Data;
 public class StockKafkaConsumer : StockConsumer
 {
     private readonly IServiceProvider _serviceProvider;
+    private readonly string topic = "stock.quantity";
 
     public StockKafkaConsumer(IServiceProvider serviceProvider)
     {
@@ -32,14 +33,14 @@ public class StockKafkaConsumer : StockConsumer
 
             using (var consumer = new ConsumerBuilder<Ignore, string>(config).Build())
             {
-                consumer.Subscribe("stock.quantity");
+                consumer.Subscribe(topic);
                 var cts = new CancellationTokenSource();
 
                 try
                 {
                     while (true)
                     {
-                        var data = consumer.Consume(cts.Token);
+                        var data = consumer.Consume();
                         Console.WriteLine(data.Message.Value);
 
                         var stock = JsonSerializer.Deserialize<Stock>(data.Message.Value);
@@ -58,8 +59,8 @@ public class StockKafkaConsumer : StockConsumer
                     consumer.Close();
                 }
             }
-        }
 
-        return Task.CompletedTask;
+            return Task.CompletedTask;
+        }
     }
 }

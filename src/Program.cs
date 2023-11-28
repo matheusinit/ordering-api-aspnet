@@ -14,7 +14,7 @@ builder.Services.AddDbContext<ApplicationContext>(
     options => options.UseSqlServer(DatabaseConnection.GetConnectionString())
 );
 builder.Services.AddSingleton<OrderingProducer, OrderingKafkaProducer>();
-builder.Services.AddHostedService<StockConsumerBackgroundService>();
+builder.Services.AddSingleton<IHostedService, StockConsumerBackgroundService>();
 builder.Services.AddSingleton<StockConsumer, StockKafkaConsumer>();
 builder.Services.AddControllers();
 
