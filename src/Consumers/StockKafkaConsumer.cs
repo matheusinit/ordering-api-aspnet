@@ -5,15 +5,21 @@ using Confluent.Kafka;
 using OrderingApi.Config;
 using System.Text.Json;
 using OrderingApi.Data;
+using OrderingApi.Services;
 
 public class StockKafkaConsumer : StockConsumer
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly string topic = "stock.quantity";
+    private CreateOrUpdateStockService _createOrUpdateStockService;
 
-    public StockKafkaConsumer(IServiceProvider serviceProvider)
+    public StockKafkaConsumer(
+        IServiceProvider serviceProvider,
+        CreateOrUpdateStockService createOrUpdateStockService
+    )
     {
         _serviceProvider = serviceProvider;
+        _createOrUpdateStockService = createOrUpdateStockService;
     }
 
     public Task Consume()
@@ -44,14 +50,7 @@ public class StockKafkaConsumer : StockConsumer
                         Console.WriteLine(data.Message.Value);
 
                         var stock = JsonSerializer.Deserialize<Stock>(data.Message.Value);
-
-                        if (stock == null)
-                        {
-                            continue;
-                        }
-
-                        _context.Stocks.Add(stock);
-                        _context.SaveChanges();
+                        _createOrUpdateStockService.Execute(stock);
                     }
                 }
                 catch (OperationCanceledException)

@@ -4,6 +4,7 @@ using OrderingApi.Config;
 using OrderingApi.Producers;
 using OrderingApi.BackgroundServices;
 using OrderingApi.Consumers;
+using OrderingApi.Services;
 
 DotEnv.Configure();
 
@@ -13,6 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ApplicationContext>(
     options => options.UseSqlServer(DatabaseConnection.GetConnectionString())
 );
+builder.Services.AddSingleton<CreateOrUpdateStockService, CreateOrUpdateStockService>();
 builder.Services.AddSingleton<OrderingProducer, OrderingKafkaProducer>();
 builder.Services.AddSingleton<IHostedService, StockConsumerBackgroundService>();
 builder.Services.AddSingleton<StockConsumer, StockKafkaConsumer>();
