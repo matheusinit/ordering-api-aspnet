@@ -22,6 +22,16 @@ public class CreateOrUpdateStockService
                 return null;
             }
 
+            var stockExists = _context.Stocks.Any(s => s.id == stock.id);
+
+            if (stockExists)
+            {
+                var stockUpdated = _context.Stocks.Update(stock);
+                _context.SaveChanges();
+
+                return stockUpdated.Entity;
+            }
+
             var stockFromDatabase = _context.Stocks.Add(stock);
             _context.SaveChanges();
 
