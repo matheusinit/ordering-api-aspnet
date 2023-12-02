@@ -1,6 +1,6 @@
 
 test.integration.run:
-	dotnet test --filter "OrderingApi.IntegrationTest"
+	TESTING=true dotnet test --filter "OrderingApi.IntegrationTest"
 
 test.unit.run:
 	dotnet test --filter "OrderingApi.UnitTest"
