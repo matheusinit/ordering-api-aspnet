@@ -34,6 +34,15 @@ public class OrderProductController : ControllerBase
                 return BadRequest(error: new { message = "Product id is required" });
             }
 
+            var stock = _context.Stocks
+                .Where(s => s.productId == request.productId)
+                .FirstOrDefault();
+
+            if (stock == null)
+            {
+                return NotFound(new { message = "Product is out of stock" });
+            }
+
             var order = new Order(request.productId);
 
             _context.Orders.Add(order);
