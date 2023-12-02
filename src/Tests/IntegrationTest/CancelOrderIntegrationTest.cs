@@ -4,6 +4,7 @@ using System;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
+using OrderingApi.BackgroundServices;
 using OrderingApi.Data;
 using OrderingApi.Domain;
 using Xunit;
@@ -18,7 +19,20 @@ public class CancelOrderIntegrationTest : IClassFixture<WebApplicationFactory<Pr
     public CancelOrderIntegrationTest()
     {
         _client = _factory
-            .WithWebHostBuilder(builder => builder.UseSolutionRelativeContentRoot(".."))
+            .WithWebHostBuilder(builder =>
+            {
+                builder.UseSolutionRelativeContentRoot("..");
+                builder.ConfigureTestServices(services =>
+                {
+                    var serviceDescriptor = services.Single(
+                        descriptor =>
+                            descriptor.ServiceType == typeof(IHostedService)
+                            && descriptor.ImplementationType
+                                == typeof(StockConsumerBackgroundService)
+                    );
+                    services.Remove(serviceDescriptor);
+                });
+            })
             .CreateClient();
 
         _context = new ApplicationContext();

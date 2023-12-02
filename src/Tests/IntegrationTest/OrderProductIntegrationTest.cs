@@ -7,6 +7,9 @@ using OrderingApi.Data;
 using Xunit;
 using FluentAssertions;
 using OrderingApi.Producers;
+using OrderingApi.Consumers;
+using System.Threading;
+using OrderingApi.BackgroundServices;
 
 class ResponseError
 {
@@ -36,6 +39,27 @@ public class FakeOrderingProducer : OrderingProducer
     }
 }
 
+public class FakeStockConsumer : StockConsumer
+{
+    public Task Consume()
+    {
+        return Task.CompletedTask;
+    }
+}
+
+public class FakeBackgroundService : IHostedService
+{
+    public Task StartAsync(CancellationToken cancellationToken)
+    {
+        return Task.CompletedTask;
+    }
+
+    public Task StopAsync(CancellationToken cancellationToken)
+    {
+        return Task.CompletedTask;
+    }
+}
+
 [Collection("Sequential")]
 public class OrderProductIntegrationTest : IClassFixture<WebApplicationFactory<Program>>
 {
@@ -52,6 +76,14 @@ public class OrderProductIntegrationTest : IClassFixture<WebApplicationFactory<P
                 builder.ConfigureTestServices(services =>
                 {
                     services.AddSingleton<OrderingProducer, FakeOrderingProducer>();
+                    services.AddSingleton<StockConsumer, FakeStockConsumer>();
+                    var serviceDescriptor = services.Single(
+                        descriptor =>
+                            descriptor.ServiceType == typeof(IHostedService)
+                            && descriptor.ImplementationType
+                                == typeof(StockConsumerBackgroundService)
+                    );
+                    services.Remove(serviceDescriptor);
                 });
             })
             .CreateClient();

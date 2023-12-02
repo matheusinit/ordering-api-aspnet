@@ -4,6 +4,7 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
+using OrderingApi.BackgroundServices;
 using OrderingApi.Data;
 using OrderingApi.Domain;
 using Xunit;
@@ -16,7 +17,20 @@ public class ListOrdersIntegrationTest : IClassFixture<WebApplicationFactory<Pro
     public ListOrdersIntegrationTest()
     {
         _client = _factory
-            .WithWebHostBuilder(builder => builder.UseSolutionRelativeContentRoot(".."))
+            .WithWebHostBuilder(builder =>
+            {
+                builder.UseSolutionRelativeContentRoot("..");
+                builder.ConfigureServices(services =>
+                {
+                    var serviceDescriptor = services.Single(
+                        descriptor =>
+                            descriptor.ServiceType == typeof(IHostedService)
+                            && descriptor.ImplementationType
+                                == typeof(StockConsumerBackgroundService)
+                    );
+                    services.Remove(serviceDescriptor);
+                });
+            })
             .CreateClient();
     }
 
