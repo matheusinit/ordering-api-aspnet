@@ -104,6 +104,12 @@ public class OrderProductIntegrationTest : IClassFixture<WebApplicationFactory<P
     public async Task WhenValidInputIsProvidedThenShouldStoreOrderInDatabase()
     {
         var productId = Guid.NewGuid();
+        var stock = new Stock();
+        stock.productId = productId.ToString();
+        stock.id = Guid.NewGuid();
+        stock.quantity = 2;
+        _context.Stocks.Add(stock);
+        _context.SaveChanges();
         var response = await _client.PostAsJsonAsync("/orders", new { productId = productId });
         var responseBody = await response.Content.ReadFromJsonAsync<OrderProductResponseBody>();
 
