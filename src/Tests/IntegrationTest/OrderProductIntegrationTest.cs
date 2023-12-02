@@ -111,10 +111,23 @@ public class OrderProductIntegrationTest : IClassFixture<WebApplicationFactory<P
         _context.Stocks.Add(stock);
         _context.SaveChanges();
         var response = await _client.PostAsJsonAsync("/orders", new { productId = productId });
+
         var responseBody = await response.Content.ReadFromJsonAsync<OrderProductResponseBody>();
 
         var order = await _context.Orders.FindAsync(responseBody?.id);
 
         order.Should().NotBeNull();
+    }
+
+    [Fact]
+    public async Task GivenValidInputToOrderProductWhenProductIsOutOfStockThenShouldGetNotFound()
+    {
+        var productId = Guid.NewGuid();
+        var response = await _client.PostAsJsonAsync("/orders", new { productId = productId });
+
+        var responseBody = await response.Content.ReadFromJsonAsync<ResponseError>();
+
+        Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        Assert.Equal(responseBody?.message, "Product is out of stock");
     }
 }
