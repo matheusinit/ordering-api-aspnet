@@ -30,12 +30,7 @@ public class StockKafkaConsumer : StockConsumer
         {
             _context = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
 
-            var config = new ConsumerConfig
-            {
-                BootstrapServers = Env.KAFKA_URL,
-                AutoOffsetReset = AutoOffsetReset.Earliest,
-                GroupId = "stock.quantity-00"
-            };
+            var config = GetKafkaConfig();
 
             using (var consumer = new ConsumerBuilder<Ignore, string>(config).Build())
             {
@@ -61,5 +56,17 @@ public class StockKafkaConsumer : StockConsumer
 
             return Task.CompletedTask;
         }
+    }
+
+    ConsumerConfig GetKafkaConfig()
+    {
+        var config = new ConsumerConfig
+        {
+            BootstrapServers = Env.KAFKA_URL,
+            AutoOffsetReset = AutoOffsetReset.Earliest,
+            GroupId = "stock.quantity-00"
+        };
+
+        return config;
     }
 }
