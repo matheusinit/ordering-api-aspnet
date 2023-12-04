@@ -42,7 +42,6 @@ public class StockKafkaConsumer : StockConsumer
                     while (true)
                     {
                         var data = consumer.Consume();
-                        Console.WriteLine(data.Message.Value);
 
                         var stock = JsonSerializer.Deserialize<Stock>(data.Message.Value);
                         _createOrUpdateStockService.Execute(stock);
