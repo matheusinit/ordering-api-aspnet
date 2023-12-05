@@ -299,7 +299,7 @@ public class OrderProductIntegrationTest : IClassFixture<WebApplicationFactory<P
             state = state,
             zipCode = zipCode
         };
-        var payment = new { method = "CREDIT_CARD" };
+        var payment = new { method = "CREDIT_CARD", cardNumber = faker.Finance.CreditCardNumber() };
 
         var response = await _client.PostAsJsonAsync(
             "/orders",
@@ -312,6 +312,48 @@ public class OrderProductIntegrationTest : IClassFixture<WebApplicationFactory<P
         );
 
         response.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
+
+    [Fact]
+    public async Task GivenCardNumberIsNotProvidedWhenCreditCardPaymentMethodIsChooseThenShouldGetBadRequest()
+    {
+        var productId = Guid.NewGuid();
+        var stock = new Stock();
+        stock.productId = productId.ToString();
+        stock.id = Guid.NewGuid();
+        stock.quantity = 2;
+        _context.Stocks.Add(stock);
+        _context.SaveChanges();
+        var faker = new Faker("en");
+        var street = faker.Address.StreetName();
+        var city = faker.Address.City();
+        var state = faker.Address.State();
+        var zipCode = faker.Address.ZipCode();
+        var address = new
+        {
+            street = street,
+            city = city,
+            state = state,
+            zipCode = zipCode
+        };
+        var payment = new { method = "CREDIT_CARD" };
+
+        var response = await _client.PostAsJsonAsync(
+            "/orders",
+            new
+            {
+                productId = productId,
+                address = address,
+                payment = payment
+            }
+        );
+
+        var responseBody = await response.Content.ReadFromJsonAsync<ResponseError>();
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        Assert.Equal(
+            responseBody?.message,
+            "Credit card information was not provided. Please provide a valid \"cardNumber\" field in \"payment\" object."
+        );
     }
 
     [Fact]
