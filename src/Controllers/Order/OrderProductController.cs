@@ -119,7 +119,7 @@ public class OrderProductController : ControllerBase
                 );
             }
 
-            if (request.payment.method != "BOLETO")
+            if (request.payment.method != "BOLETO" && request.payment.method != "CREDIT_CARD")
             {
                 return BadRequest(
                     new
