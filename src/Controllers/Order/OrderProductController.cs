@@ -83,6 +83,16 @@ public class OrderProductController : ControllerBase
                 );
             }
 
+            if (request.address.zipCode == null)
+            {
+                return BadRequest(
+                    new
+                    {
+                        message = "Address information was not provided. Please provide a valid \"zipCode\" field in \"address\" object."
+                    }
+                );
+            }
+
             var stock = _context.Stocks
                 .Where(s => s.productId == request.productId)
                 .FirstOrDefault();
