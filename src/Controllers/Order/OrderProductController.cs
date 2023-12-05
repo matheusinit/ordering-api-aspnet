@@ -6,9 +6,19 @@ using OrderingApi.Data;
 using OrderingApi.Domain;
 using OrderingApi.Producers;
 
+public class AddressInfo
+{
+    public string? street { get; set; }
+    public string? city { get; set; }
+    public string? state { get; set; }
+    public string? country { get; set; }
+    public string? zipCode { get; set; }
+}
+
 public class OrderProductRequest
 {
     public string? productId { get; set; }
+    public AddressInfo? address { get; set; }
 }
 
 [ApiController]
@@ -32,6 +42,16 @@ public class OrderProductController : ControllerBase
             if (request.productId == null)
             {
                 return BadRequest(error: new { message = "Product id is required" });
+            }
+
+            if (request.address == null)
+            {
+                return BadRequest(
+                    new
+                    {
+                        message = "Address information was not provided. Please provide a valid \"address\" object."
+                    }
+                );
             }
 
             var stock = _context.Stocks
