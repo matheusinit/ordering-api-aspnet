@@ -33,13 +33,7 @@ public class StockKafkaConsumer : StockConsumer
 
             try
             {
-                while (true)
-                {
-                    var data = consumer.Consume();
-
-                    var stock = DeserializeData(data.Message.Value);
-                    _createOrUpdateStockService.Execute(stock);
-                }
+                ConsumeDataUntilAppTermination(consumer);
             }
             catch (OperationCanceledException)
             {
@@ -60,6 +54,17 @@ public class StockKafkaConsumer : StockConsumer
         };
 
         return config;
+    }
+
+    void ConsumeDataUntilAppTermination(IConsumer<Ignore, String> consumer)
+    {
+        while (true)
+        {
+            var data = consumer.Consume();
+
+            var stock = DeserializeData(data.Message.Value);
+            _createOrUpdateStockService.Execute(stock);
+        }
     }
 
     Stock? DeserializeData(String streamData)
