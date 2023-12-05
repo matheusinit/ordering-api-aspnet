@@ -64,6 +64,16 @@ public class OrderProductController : ControllerBase
                 );
             }
 
+            if (request.address.city == null)
+            {
+                return BadRequest(
+                    new
+                    {
+                        message = "Address information was not provided. Please provide a valid \"city\" field in \"address\" object."
+                    }
+                );
+            }
+
             var stock = _context.Stocks
                 .Where(s => s.productId == request.productId)
                 .FirstOrDefault();
