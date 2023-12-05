@@ -37,7 +37,7 @@ public class StockKafkaConsumer : StockConsumer
                 {
                     var data = consumer.Consume();
 
-                    var stock = JsonSerializer.Deserialize<Stock>(data.Message.Value);
+                    var stock = DeserializeData(data.Message.Value);
                     _createOrUpdateStockService.Execute(stock);
                 }
             }
@@ -60,5 +60,10 @@ public class StockKafkaConsumer : StockConsumer
         };
 
         return config;
+    }
+
+    Stock? DeserializeData(String streamData)
+    {
+        return JsonSerializer.Deserialize<Stock>(streamData);
     }
 }
