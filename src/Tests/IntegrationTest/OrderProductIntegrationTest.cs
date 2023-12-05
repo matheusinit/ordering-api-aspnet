@@ -151,6 +151,34 @@ public class OrderProductIntegrationTest : IClassFixture<WebApplicationFactory<P
     }
 
     [Fact]
+    public async Task GivenZipCodeIsNotProvidedWhenOrderProductThenShouldGetBadRequest()
+    {
+        var productId = Guid.NewGuid();
+        var faker = new Faker("en");
+        var street = faker.Address.StreetName();
+        var city = faker.Address.City();
+        var state = faker.Address.State();
+        var address = new
+        {
+            street = street,
+            city = city,
+            state = state
+        };
+
+        var response = await _client.PostAsJsonAsync(
+            "/orders",
+            new { productId = Guid.NewGuid(), address = address }
+        );
+
+        var responseBody = await response.Content.ReadFromJsonAsync<ResponseError>();
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal(
+            responseBody?.message,
+            "Address information was not provided. Please provide a valid \"zipCode\" field in \"address\" object."
+        );
+    }
+
+    [Fact]
     public async Task WhenValidInputIsProvidedThenShouldStoreOrderInDatabase()
     {
         var productId = Guid.NewGuid();
@@ -164,11 +192,13 @@ public class OrderProductIntegrationTest : IClassFixture<WebApplicationFactory<P
         var street = faker.Address.StreetName();
         var city = faker.Address.City();
         var state = faker.Address.State();
+        var zipCode = faker.Address.ZipCode();
         var address = new
         {
             street = street,
             city = city,
-            state = state
+            state = state,
+            zipCode = zipCode
         };
         var response = await _client.PostAsJsonAsync(
             "/orders",
@@ -190,11 +220,13 @@ public class OrderProductIntegrationTest : IClassFixture<WebApplicationFactory<P
         var street = faker.Address.StreetName();
         var city = faker.Address.City();
         var state = faker.Address.State();
+        var zipCode = faker.Address.ZipCode();
         var address = new
         {
             street = street,
             city = city,
-            state = state
+            state = state,
+            zipCode = zipCode
         };
 
         var response = await _client.PostAsJsonAsync(
