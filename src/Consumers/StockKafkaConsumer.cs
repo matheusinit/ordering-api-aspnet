@@ -24,37 +24,30 @@ public class StockKafkaConsumer : StockConsumer
 
     public Task Consume()
     {
-        var _context = new ApplicationContext();
+        var config = GetKafkaConfig();
 
-        using (var scope = _serviceProvider.CreateScope())
+        using (var consumer = new ConsumerBuilder<Ignore, string>(config).Build())
         {
-            _context = scope.ServiceProvider.GetRequiredService<ApplicationContext>();
+            consumer.Subscribe(topic);
+            var cts = new CancellationTokenSource();
 
-            var config = GetKafkaConfig();
-
-            using (var consumer = new ConsumerBuilder<Ignore, string>(config).Build())
+            try
             {
-                consumer.Subscribe(topic);
-                var cts = new CancellationTokenSource();
-
-                try
+                while (true)
                 {
-                    while (true)
-                    {
-                        var data = consumer.Consume();
+                    var data = consumer.Consume();
 
-                        var stock = JsonSerializer.Deserialize<Stock>(data.Message.Value);
-                        _createOrUpdateStockService.Execute(stock);
-                    }
-                }
-                catch (OperationCanceledException)
-                {
-                    consumer.Close();
+                    var stock = JsonSerializer.Deserialize<Stock>(data.Message.Value);
+                    _createOrUpdateStockService.Execute(stock);
                 }
             }
-
-            return Task.CompletedTask;
+            catch (OperationCanceledException)
+            {
+                consumer.Close();
+            }
         }
+
+        return Task.CompletedTask;
     }
 
     ConsumerConfig GetKafkaConfig()
