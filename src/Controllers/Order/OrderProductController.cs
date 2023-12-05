@@ -119,6 +119,16 @@ public class OrderProductController : ControllerBase
                 );
             }
 
+            if (request.payment.method != "BOLETO")
+            {
+                return BadRequest(
+                    new
+                    {
+                        message = "Payment information was not provided. Please provide for \"method\" field in \"payment\" object either: \"BOLETO\" or \"CREDIT_CARD\"."
+                    }
+                );
+            }
+
             var stock = _context.Stocks
                 .Where(s => s.productId == request.productId)
                 .FirstOrDefault();
