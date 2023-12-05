@@ -119,15 +119,7 @@ public class OrderProductController : ControllerBase
                 );
             }
 
-            if (request.payment.method != "BOLETO" && request.payment.method != "CREDIT_CARD")
-            {
-                return BadRequest(
-                    new
-                    {
-                        message = "Payment information was not provided. Please provide for \"method\" field in \"payment\" object either: \"BOLETO\" or \"CREDIT_CARD\"."
-                    }
-                );
-            }
+            var payment = new Payment(request.payment.method);
 
             var stock = _context.Stocks
                 .Where(s => s.productId == request.productId)
@@ -176,6 +168,16 @@ public class OrderProductController : ControllerBase
             if (error.Message == "Product cannot be null")
             {
                 return NotFound(new { message = "Product not found" });
+            }
+
+            if (error.Message == "Invalid payment method")
+            {
+                return BadRequest(
+                    new
+                    {
+                        message = "Payment information was not provided. Please provide for \"method\" field in \"payment\" object either: \"BOLETO\" or \"CREDIT_CARD\"."
+                    }
+                );
             }
 
             return StatusCode(500, new { message = "An inner error occurred. Try again later." });
