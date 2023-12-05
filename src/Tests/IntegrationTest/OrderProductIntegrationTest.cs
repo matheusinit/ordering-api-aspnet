@@ -138,7 +138,10 @@ public class OrderProductIntegrationTest : IClassFixture<WebApplicationFactory<P
         stock.quantity = 2;
         _context.Stocks.Add(stock);
         _context.SaveChanges();
-        var address = new { street = "street", city = "city" };
+        var faker = new Faker("en");
+        var street = faker.Address.StreetName();
+        var city = faker.Address.City();
+        var address = new { street = street, city = city };
         var response = await _client.PostAsJsonAsync(
             "/orders",
             new { productId = productId, address = address }
@@ -155,14 +158,17 @@ public class OrderProductIntegrationTest : IClassFixture<WebApplicationFactory<P
     public async Task GivenValidInputToOrderProductWhenProductIsOutOfStockThenShouldGetNotFound()
     {
         var productId = Guid.NewGuid();
-        var address = new { street = "street", city = "city" };
+        var faker = new Faker("en");
+        var street = faker.Address.StreetName();
+        var city = faker.Address.City();
+        var address = new { street = street, city = city };
+
         var response = await _client.PostAsJsonAsync(
             "/orders",
             new { productId = productId, address = address }
         );
 
         var responseBody = await response.Content.ReadFromJsonAsync<ResponseError>();
-
         Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         Assert.Equal(responseBody?.message, "Product is out of stock");
     }
