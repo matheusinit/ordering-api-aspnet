@@ -278,6 +278,43 @@ public class OrderProductIntegrationTest : IClassFixture<WebApplicationFactory<P
     }
 
     [Fact]
+    public async Task GivenCreditCardAsPaymentMethodWhenOrderProductThenShouldGetCreated()
+    {
+        var productId = Guid.NewGuid();
+        var stock = new Stock();
+        stock.productId = productId.ToString();
+        stock.id = Guid.NewGuid();
+        stock.quantity = 2;
+        _context.Stocks.Add(stock);
+        _context.SaveChanges();
+        var faker = new Faker("en");
+        var street = faker.Address.StreetName();
+        var city = faker.Address.City();
+        var state = faker.Address.State();
+        var zipCode = faker.Address.ZipCode();
+        var address = new
+        {
+            street = street,
+            city = city,
+            state = state,
+            zipCode = zipCode
+        };
+        var payment = new { method = "CREDIT_CARD" };
+
+        var response = await _client.PostAsJsonAsync(
+            "/orders",
+            new
+            {
+                productId = productId,
+                address = address,
+                payment = payment
+            }
+        );
+
+        response.StatusCode.Should().Be(HttpStatusCode.OK);
+    }
+
+    [Fact]
     public async Task WhenValidInputIsProvidedThenShouldStoreOrderInDatabase()
     {
         var productId = Guid.NewGuid();
