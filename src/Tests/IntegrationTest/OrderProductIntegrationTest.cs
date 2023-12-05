@@ -208,6 +208,41 @@ public class OrderProductIntegrationTest : IClassFixture<WebApplicationFactory<P
     }
 
     [Fact]
+    public async Task GivenPaymentMethodIsNotProvidedWhenOrderProductThenShouldGetBadRequest()
+    {
+        var productId = Guid.NewGuid();
+        var faker = new Faker("en");
+        var street = faker.Address.StreetName();
+        var city = faker.Address.City();
+        var state = faker.Address.State();
+        var address = new
+        {
+            street = street,
+            city = city,
+            state = state,
+            zipCode = faker.Address.ZipCode()
+        };
+        var payment = new { };
+
+        var response = await _client.PostAsJsonAsync(
+            "/orders",
+            new
+            {
+                productId = Guid.NewGuid(),
+                address = address,
+                payment = payment
+            }
+        );
+
+        var responseBody = await response.Content.ReadFromJsonAsync<ResponseError>();
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal(
+            responseBody?.message,
+            "Payment information was not provided. Please provide a valid \"method\" field in \"payment\" object."
+        );
+    }
+
+    [Fact]
     public async Task WhenValidInputIsProvidedThenShouldStoreOrderInDatabase()
     {
         var productId = Guid.NewGuid();
@@ -229,7 +264,7 @@ public class OrderProductIntegrationTest : IClassFixture<WebApplicationFactory<P
             state = state,
             zipCode = zipCode
         };
-        var payment = new { };
+        var payment = new { method = "BOLETO" };
         var response = await _client.PostAsJsonAsync(
             "/orders",
             new
@@ -263,7 +298,7 @@ public class OrderProductIntegrationTest : IClassFixture<WebApplicationFactory<P
             state = state,
             zipCode = zipCode
         };
-        var payment = new { };
+        var payment = new { method = "BOLETO" };
 
         var response = await _client.PostAsJsonAsync(
             "/orders",
