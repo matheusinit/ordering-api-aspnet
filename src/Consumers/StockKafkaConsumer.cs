@@ -29,16 +29,8 @@ public class StockKafkaConsumer : StockConsumer
         using (var consumer = GetKafkaConsumer(config))
         {
             consumer.Subscribe(topic);
-            var cts = new CancellationTokenSource();
 
-            try
-            {
-                ConsumeDataUntilAppTermination(consumer);
-            }
-            catch (OperationCanceledException)
-            {
-                consumer.Close();
-            }
+            TryToConsumeOrCloseOnTermination(consumer);
         }
 
         return Task.CompletedTask;
@@ -61,6 +53,18 @@ public class StockKafkaConsumer : StockConsumer
         var consumer = new ConsumerBuilder<Ignore, string>(config).Build();
 
         return consumer;
+    }
+
+    void TryToConsumeOrCloseOnTermination(IConsumer<Ignore, String> consumer)
+    {
+        try
+        {
+            ConsumeDataUntilAppTermination(consumer);
+        }
+        catch (OperationCanceledException)
+        {
+            consumer.Close();
+        }
     }
 
     void ConsumeDataUntilAppTermination(IConsumer<Ignore, String> consumer)
