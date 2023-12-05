@@ -73,6 +73,21 @@ public class OrderProductIntegrationTest : IClassFixture<WebApplicationFactory<P
     }
 
     [Fact]
+    public async Task GivenAddressInformationIsNotProvidedWhenOrderProductThenShouldGetBadRequest()
+    {
+        var productId = Guid.NewGuid();
+
+        var response = await _client.PostAsJsonAsync("/orders", new { productId = Guid.NewGuid() });
+
+        var responseBody = await response.Content.ReadFromJsonAsync<ResponseError>();
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal(
+            responseBody?.message,
+            "Address information was not provided. Please provide a valid \"address\" object."
+        );
+    }
+
+    [Fact]
     public async Task WhenValidInputIsProvidedThenShouldStoreOrderInDatabase()
     {
         var productId = Guid.NewGuid();
@@ -82,7 +97,11 @@ public class OrderProductIntegrationTest : IClassFixture<WebApplicationFactory<P
         stock.quantity = 2;
         _context.Stocks.Add(stock);
         _context.SaveChanges();
-        var response = await _client.PostAsJsonAsync("/orders", new { productId = productId });
+        var address = new { street = "street" };
+        var response = await _client.PostAsJsonAsync(
+            "/orders",
+            new { productId = productId, address = address }
+        );
 
         var responseBody = await response.Content.ReadFromJsonAsync<OrderProductResponseBody>();
 
@@ -95,7 +114,11 @@ public class OrderProductIntegrationTest : IClassFixture<WebApplicationFactory<P
     public async Task GivenValidInputToOrderProductWhenProductIsOutOfStockThenShouldGetNotFound()
     {
         var productId = Guid.NewGuid();
-        var response = await _client.PostAsJsonAsync("/orders", new { productId = productId });
+        var address = new { street = "street", };
+        var response = await _client.PostAsJsonAsync(
+            "/orders",
+            new { productId = productId, address = address }
+        );
 
         var responseBody = await response.Content.ReadFromJsonAsync<ResponseError>();
 
