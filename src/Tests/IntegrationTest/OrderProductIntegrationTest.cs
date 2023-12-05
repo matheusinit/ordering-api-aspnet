@@ -129,6 +129,27 @@ public class OrderProductIntegrationTest : IClassFixture<WebApplicationFactory<P
     }
 
     [Fact]
+    public async Task GivenStateIsNotProvidedWhenOrderProductThenShouldGetBadRequest()
+    {
+        var productId = Guid.NewGuid();
+        var faker = new Faker("en");
+
+        var address = new { street = faker.Address.StreetName(), city = faker.Address.City() };
+
+        var response = await _client.PostAsJsonAsync(
+            "/orders",
+            new { productId = Guid.NewGuid(), address = address }
+        );
+
+        var responseBody = await response.Content.ReadFromJsonAsync<ResponseError>();
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal(
+            responseBody?.message,
+            "Address information was not provided. Please provide a valid \"state\" field in \"address\" object."
+        );
+    }
+
+    [Fact]
     public async Task WhenValidInputIsProvidedThenShouldStoreOrderInDatabase()
     {
         var productId = Guid.NewGuid();
@@ -141,7 +162,12 @@ public class OrderProductIntegrationTest : IClassFixture<WebApplicationFactory<P
         var faker = new Faker("en");
         var street = faker.Address.StreetName();
         var city = faker.Address.City();
-        var address = new { street = street, city = city };
+        var address = new
+        {
+            street = street,
+            city = city,
+            state = faker.Address.State()
+        };
         var response = await _client.PostAsJsonAsync(
             "/orders",
             new { productId = productId, address = address }
@@ -161,7 +187,12 @@ public class OrderProductIntegrationTest : IClassFixture<WebApplicationFactory<P
         var faker = new Faker("en");
         var street = faker.Address.StreetName();
         var city = faker.Address.City();
-        var address = new { street = street, city = city };
+        var address = new
+        {
+            street = street,
+            city = city,
+            state = faker.Address.State()
+        };
 
         var response = await _client.PostAsJsonAsync(
             "/orders",
