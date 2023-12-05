@@ -8,8 +8,9 @@ using Xunit;
 using FluentAssertions;
 using OrderingApi.Producers;
 using OrderingApi.Consumers;
-using System.Threading;
 using OrderingApi.BackgroundServices;
+using OrderingApi.Tests.Fakes;
+using Ordering.Tests.Fakes;
 
 class ResponseError
 {
@@ -29,35 +30,6 @@ public class OrderProductResponseBody
     public DateTime createdAt { get; set; }
     public DateTime? updatedAt { get; set; }
     public DateTime? canceledAt { get; set; }
-}
-
-public class FakeOrderingProducer : OrderingProducer
-{
-    public Task<bool> SendOrderThroughMessageQueue(string topic, OrderToProduce order)
-    {
-        return Task.FromResult(true);
-    }
-}
-
-public class FakeStockConsumer : StockConsumer
-{
-    public Task Consume()
-    {
-        return Task.CompletedTask;
-    }
-}
-
-public class FakeBackgroundService : IHostedService
-{
-    public Task StartAsync(CancellationToken cancellationToken)
-    {
-        return Task.CompletedTask;
-    }
-
-    public Task StopAsync(CancellationToken cancellationToken)
-    {
-        return Task.CompletedTask;
-    }
 }
 
 [Collection("Sequential")]
