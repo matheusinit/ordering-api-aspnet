@@ -14,7 +14,10 @@ public class AddressInfo
     public string? zipCode { get; set; }
 }
 
-public class PaymentInfo { }
+public class PaymentInfo
+{
+    public string? method { get; set; }
+}
 
 public class OrderProductRequest
 {
@@ -102,6 +105,16 @@ public class OrderProductController : ControllerBase
                     new
                     {
                         message = "Payment information was not provided. Please provide a valid \"payment\" object."
+                    }
+                );
+            }
+
+            if (request.payment.method == null)
+            {
+                return BadRequest(
+                    new
+                    {
+                        message = "Payment information was not provided. Please provide a valid \"method\" field in \"payment\" object."
                     }
                 );
             }
