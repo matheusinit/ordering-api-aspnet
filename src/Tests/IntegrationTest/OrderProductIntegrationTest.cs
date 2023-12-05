@@ -243,6 +243,41 @@ public class OrderProductIntegrationTest : IClassFixture<WebApplicationFactory<P
     }
 
     [Fact]
+    public async Task GivenInvalidPaymentMethodWhenOrderProductThenShouldGetBadRequest()
+    {
+        var productId = Guid.NewGuid();
+        var faker = new Faker("en");
+        var street = faker.Address.StreetName();
+        var city = faker.Address.City();
+        var state = faker.Address.State();
+        var address = new
+        {
+            street = street,
+            city = city,
+            state = state,
+            zipCode = faker.Address.ZipCode()
+        };
+        var payment = new { method = "INVALID_METHOD" };
+
+        var response = await _client.PostAsJsonAsync(
+            "/orders",
+            new
+            {
+                productId = Guid.NewGuid(),
+                address = address,
+                payment = payment
+            }
+        );
+
+        var responseBody = await response.Content.ReadFromJsonAsync<ResponseError>();
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal(
+            responseBody?.message,
+            "Payment information was not provided. Please provide for \"method\" field in \"payment\" object either: \"BOLETO\" or \"CREDIT_CARD\"."
+        );
+    }
+
+    [Fact]
     public async Task WhenValidInputIsProvidedThenShouldStoreOrderInDatabase()
     {
         var productId = Guid.NewGuid();
