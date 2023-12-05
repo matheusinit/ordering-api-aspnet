@@ -11,7 +11,6 @@ public class AddressInfo
     public string? street { get; set; }
     public string? city { get; set; }
     public string? state { get; set; }
-    public string? country { get; set; }
     public string? zipCode { get; set; }
 }
 
@@ -70,6 +69,16 @@ public class OrderProductController : ControllerBase
                     new
                     {
                         message = "Address information was not provided. Please provide a valid \"city\" field in \"address\" object."
+                    }
+                );
+            }
+
+            if (request.address.state == null)
+            {
+                return BadRequest(
+                    new
+                    {
+                        message = "Address information was not provided. Please provide a valid \"state\" field in \"address\" object."
                     }
                 );
             }
