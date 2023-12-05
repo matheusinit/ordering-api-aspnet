@@ -133,8 +133,9 @@ public class OrderProductIntegrationTest : IClassFixture<WebApplicationFactory<P
     {
         var productId = Guid.NewGuid();
         var faker = new Faker("en");
-
-        var address = new { street = faker.Address.StreetName(), city = faker.Address.City() };
+        var street = faker.Address.StreetName();
+        var city = faker.Address.City();
+        var address = new { street = street, city = city };
 
         var response = await _client.PostAsJsonAsync(
             "/orders",
@@ -162,11 +163,12 @@ public class OrderProductIntegrationTest : IClassFixture<WebApplicationFactory<P
         var faker = new Faker("en");
         var street = faker.Address.StreetName();
         var city = faker.Address.City();
+        var state = faker.Address.State();
         var address = new
         {
             street = street,
             city = city,
-            state = faker.Address.State()
+            state = state
         };
         var response = await _client.PostAsJsonAsync(
             "/orders",
@@ -187,11 +189,12 @@ public class OrderProductIntegrationTest : IClassFixture<WebApplicationFactory<P
         var faker = new Faker("en");
         var street = faker.Address.StreetName();
         var city = faker.Address.City();
+        var state = faker.Address.State();
         var address = new
         {
             street = street,
             city = city,
-            state = faker.Address.State()
+            state = state
         };
 
         var response = await _client.PostAsJsonAsync(
