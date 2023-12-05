@@ -88,6 +88,25 @@ public class OrderProductIntegrationTest : IClassFixture<WebApplicationFactory<P
     }
 
     [Fact]
+    public async Task GivenStreetIsNotProvidedWhenOrderProductThenShouldGetBadRequest()
+    {
+        var productId = Guid.NewGuid();
+        var address = new { };
+
+        var response = await _client.PostAsJsonAsync(
+            "/orders",
+            new { productId = Guid.NewGuid(), address = address }
+        );
+
+        var responseBody = await response.Content.ReadFromJsonAsync<ResponseError>();
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal(
+            responseBody?.message,
+            "Address information was not provided. Please provide a valid \"street\" field in \"address\" object."
+        );
+    }
+
+    [Fact]
     public async Task WhenValidInputIsProvidedThenShouldStoreOrderInDatabase()
     {
         var productId = Guid.NewGuid();
