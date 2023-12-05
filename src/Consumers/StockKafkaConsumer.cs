@@ -26,7 +26,7 @@ public class StockKafkaConsumer : StockConsumer
     {
         var config = GetKafkaConfig();
 
-        using (var consumer = new ConsumerBuilder<Ignore, string>(config).Build())
+        using (var consumer = GetKafkaConsumer(config))
         {
             consumer.Subscribe(topic);
             var cts = new CancellationTokenSource();
@@ -54,6 +54,13 @@ public class StockKafkaConsumer : StockConsumer
         };
 
         return config;
+    }
+
+    IConsumer<Ignore, String> GetKafkaConsumer(ConsumerConfig config)
+    {
+        var consumer = new ConsumerBuilder<Ignore, string>(config).Build();
+
+        return consumer;
     }
 
     void ConsumeDataUntilAppTermination(IConsumer<Ignore, String> consumer)
