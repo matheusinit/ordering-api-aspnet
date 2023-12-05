@@ -14,10 +14,13 @@ public class AddressInfo
     public string? zipCode { get; set; }
 }
 
+public class PaymentInfo { }
+
 public class OrderProductRequest
 {
     public string? productId { get; set; }
     public AddressInfo? address { get; set; }
+    public PaymentInfo? payment { get; set; }
 }
 
 [ApiController]
@@ -89,6 +92,16 @@ public class OrderProductController : ControllerBase
                     new
                     {
                         message = "Address information was not provided. Please provide a valid \"zipCode\" field in \"address\" object."
+                    }
+                );
+            }
+
+            if (request.payment == null)
+            {
+                return BadRequest(
+                    new
+                    {
+                        message = "Payment information was not provided. Please provide a valid \"payment\" object."
                     }
                 );
             }
