@@ -322,7 +322,7 @@ public class OrderProductIntegrationTest : IClassFixture<WebApplicationFactory<P
     }
 
     [Fact]
-    public async Task GivenCreditCardAsPaymentMethodWhenOrderProductThenShouldGetCreated()
+    public async Task GivenExpirationYearIsNotProvidedWhenCreditCardPaymentMethodIsChooseThenShouldGetBadRequest()
     {
         var productId = Guid.NewGuid();
         var stock = new Stock();
@@ -351,6 +351,58 @@ public class OrderProductIntegrationTest : IClassFixture<WebApplicationFactory<P
             method = paymentMethod,
             cardNumber = cardNumber,
             expirationMonth = expirationMonth
+        };
+
+        var response = await _client.PostAsJsonAsync(
+            "/orders",
+            new
+            {
+                productId = productId,
+                address = address,
+                payment = payment
+            }
+        );
+
+        var responseBody = await response.Content.ReadFromJsonAsync<ResponseError>();
+        response.StatusCode.Should().Be(HttpStatusCode.BadRequest);
+        Assert.Equal(
+            responseBody?.message,
+            "Credit card information was not provided. Please provide a valid \"expirationYear\" field in format YYYY in \"payment\" object."
+        );
+    }
+
+    [Fact]
+    public async Task GivenCreditCardAsPaymentMethodWhenOrderProductThenShouldGetCreated()
+    {
+        var productId = Guid.NewGuid();
+        var stock = new Stock();
+        stock.productId = productId.ToString();
+        stock.id = Guid.NewGuid();
+        stock.quantity = 2;
+        _context.Stocks.Add(stock);
+        _context.SaveChanges();
+        var faker = new Faker("en");
+        var street = faker.Address.StreetName();
+        var city = faker.Address.City();
+        var state = faker.Address.State();
+        var zipCode = faker.Address.ZipCode();
+        var address = new
+        {
+            street = street,
+            city = city,
+            state = state,
+            zipCode = zipCode
+        };
+        var paymentMethod = "CREDIT_CARD";
+        var cardNumber = faker.Finance.CreditCardNumber();
+        var expirationMonth = faker.Random.Int(0, 12);
+        var expirationYear = faker.Date.Recent(365).Year;
+        var payment = new
+        {
+            method = paymentMethod,
+            cardNumber = cardNumber,
+            expirationMonth = expirationMonth,
+            expirationYear = expirationYear
         };
 
         var response = await _client.PostAsJsonAsync(
