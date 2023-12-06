@@ -299,7 +299,9 @@ public class OrderProductIntegrationTest : IClassFixture<WebApplicationFactory<P
             state = state,
             zipCode = zipCode
         };
-        var payment = new { method = "CREDIT_CARD", cardNumber = faker.Finance.CreditCardNumber() };
+        var paymentMethod = "CREDIT_CARD";
+        var cardNumber = faker.Finance.CreditCardNumber();
+        var payment = new { method = paymentMethod, cardNumber = cardNumber };
 
         var response = await _client.PostAsJsonAsync(
             "/orders",
