@@ -60,12 +60,17 @@ public class Payment
 
     private void SetPaymentMethod(string method)
     {
-        if (method != "BOLETO" && method != "CREDIT_CARD")
+        if (!IsValidPaymentMethod(method))
         {
             throw new Exception("Invalid payment method");
         }
 
         this.method = method;
+    }
+
+    private Boolean IsValidPaymentMethod(string method)
+    {
+        return method == "BOLETO" || method == "CREDIT_CARD";
     }
 
     private void SetCardNumber(string? cardNumber)
