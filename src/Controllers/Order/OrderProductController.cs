@@ -123,47 +123,13 @@ public class OrderProductController : ControllerBase
                 );
             }
 
-            if (request.payment.method == "CREDIT_CARD" && request.payment.cardNumber == null)
-            {
-                return BadRequest(
-                    new
-                    {
-                        message = "Credit card information was not provided. Please provide a valid \"cardNumber\" field in \"payment\" object."
-                    }
-                );
-            }
-
-            if (request.payment.method == "CREDIT_CARD" && request.payment.expirationMonth == null)
-            {
-                return BadRequest(
-                    new
-                    {
-                        message = "Credit card information was not provided. Please provide a valid \"expirationMonth\" field from 0-12 in \"payment\" object."
-                    }
-                );
-            }
-
-            if (request.payment.method == "CREDIT_CARD" && request.payment.expirationYear == null)
-            {
-                return BadRequest(
-                    new
-                    {
-                        message = "Credit card information was not provided. Please provide a valid \"expirationYear\" field in format YYYY in \"payment\" object."
-                    }
-                );
-            }
-
-            if (request.payment.method == "CREDIT_CARD" && request.payment.cvc == null)
-            {
-                return BadRequest(
-                    new
-                    {
-                        message = "Credit card information was not provided. Please provide a valid \"cvc\" field in \"payment\" object."
-                    }
-                );
-            }
-
-            var payment = new Payment(request.payment.method);
+            var payment = new Payment(
+                request.payment.method,
+                request.payment.cardNumber,
+                request.payment.expirationMonth,
+                request.payment.expirationYear,
+                request.payment.cvc
+            );
 
             var stock = _context.Stocks
                 .Where(s => s.productId == request.productId)
@@ -220,6 +186,57 @@ public class OrderProductController : ControllerBase
                     new
                     {
                         message = "Payment information was not provided. Please provide for \"method\" field in \"payment\" object either: \"BOLETO\" or \"CREDIT_CARD\"."
+                    }
+                );
+            }
+
+            if (
+                error.Message
+                == "Invalid payment method. Credit card method is required to set card number"
+            )
+            {
+                return BadRequest(
+                    new
+                    {
+                        message = "Credit card information was not provided. Please provide a valid \"cardNumber\" field in \"payment\" object."
+                    }
+                );
+            }
+
+            if (
+                error.Message
+                == "Invalid payment method. Credit card method is required to set expiration month"
+            )
+            {
+                return BadRequest(
+                    new
+                    {
+                        message = "Credit card information was not provided. Please provide a valid \"expirationMonth\" field from 0-12 in \"payment\" object."
+                    }
+                );
+            }
+
+            if (
+                error.Message
+                == "Invalid payment method. Credit card method is required to set expiration year"
+            )
+            {
+                return BadRequest(
+                    new
+                    {
+                        message = "Credit card information was not provided. Please provide a valid \"expirationYear\" field in format YYYY in \"payment\" object."
+                    }
+                );
+            }
+
+            if (
+                error.Message == "Invalid payment method. Credit card method is required to set cvc"
+            )
+            {
+                return BadRequest(
+                    new
+                    {
+                        message = "Credit card information was not provided. Please provide a valid \"cvc\" field in \"payment\" object."
                     }
                 );
             }
