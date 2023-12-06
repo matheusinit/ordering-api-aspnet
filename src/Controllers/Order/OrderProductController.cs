@@ -20,6 +20,7 @@ public class PaymentInfo
     public string? cardNumber { get; set; }
     public int? expirationMonth { get; set; }
     public int? expirationYear { get; set; }
+    public int? cvc { get; set; }
 }
 
 public class OrderProductRequest
@@ -148,6 +149,16 @@ public class OrderProductController : ControllerBase
                     new
                     {
                         message = "Credit card information was not provided. Please provide a valid \"expirationYear\" field in format YYYY in \"payment\" object."
+                    }
+                );
+            }
+
+            if (request.payment.method == "CREDIT_CARD" && request.payment.cvc == null)
+            {
+                return BadRequest(
+                    new
+                    {
+                        message = "Credit card information was not provided. Please provide a valid \"cvc\" field in \"payment\" object."
                     }
                 );
             }
